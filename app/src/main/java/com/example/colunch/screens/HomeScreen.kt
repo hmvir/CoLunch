@@ -9,12 +9,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.colunch.Greeting
-import com.example.colunch.models.addToFirestore
 import com.example.colunch.ui.theme.CoLunchTheme
+import com.example.colunch.widgets.Greeting
+import com.example.colunch.widgets.SimpleButton
+import com.example.colunch.widgets.SimpleTextField
 
 @Composable
 fun HomeScreen(
@@ -98,35 +98,10 @@ fun HomeScreen(
                         }
                     }
                 }
-
-
-
-
-
-
             }
         }
     }
 
 }
 
-@Composable
-fun SimpleTextField() : String {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    TextField(
-        value = text,
-        onValueChange = { newText ->
-            text = newText
-        }
-    )
-    return text.text
-}
 
-@Composable
-fun SimpleButton(inputtext : String) {
-    Button(onClick = {
-        addToFirestore(inputtext)
-    }) {
-        Text(text = "Simple Button")
-    }
-}
