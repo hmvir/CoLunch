@@ -39,11 +39,11 @@ fun addToRealtimeDatabase(){
     //myRef.child("n1").push().setValue("Hallo Benjamin")
 }
 
-fun addToFirestore(){
+fun addToFirestore(inputtext: String) {
     // Create a new user with a first and last name
     val db = Firebase.firestore
     val user = hashMapOf(
-        "first" to "Ada",
+        "first" to inputtext,
         "last" to "Lovelace",
         "born" to 1815
     )

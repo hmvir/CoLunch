@@ -1,18 +1,19 @@
 package com.example.colunch.screens
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.colunch.Greeting
+import com.example.colunch.models.addToFirestore
 import com.example.colunch.ui.theme.CoLunchTheme
 
 @Composable
@@ -87,13 +88,45 @@ fun HomeScreen(
 
                 })
             {
-                LazyColumn {
-                    items(fromFirestore) { movie ->
-                        Greeting(name = movie)
+
+                Column {
+                    var inputtext = SimpleTextField()
+                    SimpleButton(inputtext)
+                    LazyColumn {
+                        items(fromFirestore) { movie ->
+                            Greeting(name = movie)
+                        }
                     }
                 }
+
+
+
+
+
+
             }
         }
     }
 
+}
+
+@Composable
+fun SimpleTextField() : String {
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+    TextField(
+        value = text,
+        onValueChange = { newText ->
+            text = newText
+        }
+    )
+    return text.text
+}
+
+@Composable
+fun SimpleButton(inputtext : String) {
+    Button(onClick = {
+        addToFirestore(inputtext)
+    }) {
+        Text(text = "Simple Button")
+    }
 }
