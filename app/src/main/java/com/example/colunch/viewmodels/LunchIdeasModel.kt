@@ -4,27 +4,27 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 
 class LunchideasModel: ViewModel() {
-    private var favorites = mutableStateListOf<String>()
+    private var lunchideas = mutableStateListOf<String>()
 
 
 
-    fun addRemoveFavorit(movie: String){
-        if(movie !in favorites) {
-            favorites.add(movie)
+    fun addRemoveFavorit(text: String){
+        if(text !in lunchideas) {
+            lunchideas.add(text)
         }
         else {
-            favorites.remove(movie)
+            lunchideas.remove(text)
         }
     }
 
     fun addFavorit(text: String){
-        if(text !in favorites) {
-            favorites.add(text)
+        if(text !in lunchideas) {
+            lunchideas.add(text)
         }
     }
 
     fun getFavorits(): List<String>{
-        return favorites
+        return lunchideas
     }
 
 
