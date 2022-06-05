@@ -8,7 +8,7 @@ class Restaurantsmodel: ViewModel() {
     private var restaurants = mutableStateListOf<Restaurant>()
 
 
-    fun addRemoveFavorit(restaurant: Restaurant){
+    fun addRemoveRestaurants(restaurant: Restaurant){
         if(restaurant !in restaurants) {
             restaurants.add(restaurant)
         }
@@ -17,13 +17,13 @@ class Restaurantsmodel: ViewModel() {
         }
     }
 
-    fun addFavorit(restaurant: Restaurant){
+    fun AddRestaurant(restaurant: Restaurant){
         if(restaurant !in restaurants) {
             restaurants.add(restaurant)
         }
     }
 
-    fun getFavorits(): List<Restaurant>{
+    fun getRestaraunts(): List<Restaurant>{
         return restaurants
     }
 
