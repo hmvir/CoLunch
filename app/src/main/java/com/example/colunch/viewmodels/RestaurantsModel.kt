@@ -8,24 +8,46 @@ class Restaurantsmodel: ViewModel() {
     private var restaurants = mutableStateListOf<Restaurant>()
 
 
-    fun addRemoveRestaurants(restaurant: Restaurant){
-        if(restaurant !in restaurants) {
-            restaurants.add(restaurant)
-        }
-        else {
-            restaurants.remove(restaurant)
-        }
-    }
-
-    fun AddRestaurant(restaurant: Restaurant){
+    fun addRestaurant(restaurant: Restaurant){
         if(restaurant !in restaurants) {
             restaurants.add(restaurant)
         }
     }
 
-    fun getRestaraunts(): List<Restaurant>{
+    fun removeRestaurantByName(name: String){
+        for(restaurant in restaurants){
+            if(restaurant.name == name){
+                restaurants.remove(restaurant)
+            }
+        }
+    }
+
+    fun getRestaurants(): List<Restaurant>{
         return restaurants
     }
+/*
+    fun getRestaurant(name: String): Restaurant {
+        val r = restaurants.find { restaurant -> restaurant.name == name }
+        /*
+        val r = Restaurant
+        for(restaurant in restaurants){
+            if(restaurant.name == name){
+                r = restaurant
+            }
+        }*/
+        return r
+    }
 
+ */
+
+    fun modifyRestaurant(name: String, beschreibung: String, website: String){
+        for(restaurant in restaurants){
+            if(restaurant.name == name){
+                restaurant.beschreibung = beschreibung
+                restaurant.website = website
+            }
+            println(restaurant.beschreibung)
+        }
+    }
 
 }

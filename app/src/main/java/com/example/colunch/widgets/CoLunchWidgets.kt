@@ -30,5 +30,5 @@ fun SimpleButton(inputtext : String) {
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+    Text(text = name)
 }

@@ -1,7 +1,9 @@
 package com.example.colunch.models
 
+import android.content.ContentValues
 import android.util.Log
 import com.example.colunch.viewmodels.LunchideasModel
+import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -9,6 +11,43 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+fun getRestaurantsFromFirestore(restaurantsmodel: Restaurantsmodel){
+    val db = Firebase.firestore
+
+    db.collection("Restaurant")
+        .get()
+        .addOnSuccessListener { documents ->
+            for (document in documents) {
+                val r = Restaurant(document.data.getValue("Name").toString(),document.data.getValue("Beschreibung").toString(),document.data.getValue("Website").toString())
+                restaurantsmodel.addRestaurant(r)
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+        }
+    //Echtzeitupdates-Sammlung
+    /*
+    db.collection("Restaurant")
+        //.whereEqualTo("state", "CA")
+        .addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.w("TAG", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+
+            for (doc in value!!) {
+                //Log.d("TAG", doc.toString())
+                doc.data.let {
+                    //Log.d("FirestoreTest", it.getValue("Name").toString())
+                    val r = Restaurant(it.getValue("Name").toString(),it.getValue("Beschreibung").toString(),it.getValue("Website").toString())
+                    restaurantsmodel.addRestaurant(r)
+                }
+            }
+        }
+
+     */
+}
 
 //TestAdd
 fun addToFirestore(inputtext: String) {
@@ -30,7 +69,7 @@ fun addToFirestore(inputtext: String) {
         }
 }
 
-fun getFromFirestore(viewmodel: LunchideasModel){
+fun getFromFirestore(lunchideaviewmodel: LunchideasModel){
     val db = Firebase.firestore
 
 /*
@@ -79,14 +118,14 @@ fun getFromFirestore(viewmodel: LunchideasModel){
                 Log.d("TAG", doc.toString())
                 doc.data.let {
                     array.add(it.toString())
-                    viewmodel.addFavorit(it.toString())
+                    //lunchideaviewmodel.addLunchidea(it.toString())
                 }
             }
             Log.d("TAG", "Current cites in CA: $array")
         }
 }
 
-fun getFromRealTimeDatabase(viewmodel: LunchideasModel){
+fun getFromRealTimeDatabase(lunchideaviewmodel: LunchideasModel){
     val database = Firebase.database
     val myTest = database.getReference("Nachrichten")
     myTest.addValueEventListener(object : ValueEventListener {
@@ -94,7 +133,8 @@ fun getFromRealTimeDatabase(viewmodel: LunchideasModel){
             val players: HashMap<String?, Any?> = HashMap()
             for (childSnapshot in snapshot.children) {
                 players[childSnapshot.key] = childSnapshot.value
-                viewmodel.addFavorit(childSnapshot.value.toString())
+
+              //  lunchideaviewmodel.addLunchidea(childSnapshot.value.toString())
             }
             /*
             val output = snapshot.value as String
@@ -112,4 +152,6 @@ fun addToRealtimeDatabase(){
     val database = Firebase.database
     val myRef = database.getReference("Nachrichten")
     //myRef.child("n1").push().setValue("Hallo Benjamin")
+
+
 }

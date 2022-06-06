@@ -6,13 +6,8 @@ import com.google.firebase.ktx.Firebase
 
 class Restaurant(
     val name: String,
-    val beschreibung: String,
-    val website: String)
+    var beschreibung: String,
+    var website: String)
 {
-
-    fun getRestaurant(): Restaurant {
-        return this
-    }
-
 
 }

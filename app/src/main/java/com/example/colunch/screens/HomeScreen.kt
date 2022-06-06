@@ -11,7 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.colunch.models.Lunchidea
+import com.example.colunch.models.Restaurant
 import com.example.colunch.ui.theme.CoLunchTheme
+import com.example.colunch.viewmodels.LunchideasModel
+import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.Greeting
 import com.example.colunch.widgets.SimpleButton
 import com.example.colunch.widgets.SimpleTextField
@@ -19,8 +23,10 @@ import com.example.colunch.widgets.SimpleTextField
 @Composable
 fun HomeScreen(
     navController: NavController,
-    FavoritViewModel: ViewModel,
-    fromFirestore: List<String>
+    RestaurantViewModel: Restaurantsmodel,
+    restaurants: List<Restaurant>,
+    LunchideaViewModel: LunchideasModel,
+    lunchideas: List<Lunchidea>
 ) {
 
     CoLunchTheme {
@@ -93,15 +99,17 @@ fun HomeScreen(
                     var inputtext = SimpleTextField()
                     SimpleButton(inputtext)
                     LazyColumn {
-                        items(fromFirestore) { movie ->
-                            Greeting(name = movie)
+                        items(restaurants) { restaurant ->
+                            Greeting(name = restaurant.beschreibung)
+                        }
+                        items(lunchideas) { lunchidea ->
+                            Greeting(name = lunchidea.bestellzeit)
                         }
                     }
                 }
             }
         }
     }
-
 }
 
 

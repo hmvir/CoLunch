@@ -2,30 +2,30 @@ package com.example.colunch.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.example.colunch.models.Lunchidea
 
 class LunchideasModel: ViewModel() {
-    private var lunchideas = mutableStateListOf<String>()
+    private var lunchideas = mutableStateListOf<Lunchidea>()
 
 
 
-    fun addRemoveFavorit(text: String){
-        if(text !in lunchideas) {
-            lunchideas.add(text)
-        }
-        else {
-            lunchideas.remove(text)
-        }
+
+    fun addLunchidea(lunchidea: Lunchidea){
+
+            lunchideas.add(lunchidea)
+
     }
 
-    fun addFavorit(text: String){
-        if(text !in lunchideas) {
-            lunchideas.add(text)
-        }
-    }
-
-    fun getFavorits(): List<String>{
+    fun getLunchideas(): List<Lunchidea>{
         return lunchideas
     }
 
+    fun removeLunchidea(bestellzeit: String){
+        for(lunchidea in lunchideas){
+            if(lunchidea.bestellzeit == bestellzeit){
+                lunchideas.remove(lunchidea)
+            }
+        }
+    }
 
 }
