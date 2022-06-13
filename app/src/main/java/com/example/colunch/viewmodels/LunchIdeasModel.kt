@@ -28,4 +28,8 @@ class LunchideasModel: ViewModel() {
         }
     }
 
+    fun getLunchIdea(id: Long): Lunchidea {
+        return getLunchideas().filter { lunch -> lunch.id == id}[0]
+    }
+
 }

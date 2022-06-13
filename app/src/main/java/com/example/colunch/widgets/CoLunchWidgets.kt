@@ -21,6 +21,7 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.colunch.models.Lunchidea
 import com.example.colunch.models.addToFirestore
+import com.example.colunch.navigation.Screens
 import com.example.colunch.screens.HomeScreen
 import com.example.colunch.ui.theme.CoLunchTheme
 
@@ -152,7 +153,7 @@ fun BottomTopBar(
 @Composable
 fun LunchideaRow(
     lunchidea: Lunchidea,
-    onItemClick: (String) -> Unit = {},
+    onItemClick: (Long) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
 
@@ -160,7 +161,7 @@ fun LunchideaRow(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
-            .clickable { },
+            .clickable { onItemClick(lunchidea.id) },
 
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
@@ -196,12 +197,13 @@ fun LunchideaRow(
 }
 
 @Composable
-fun LunchDetails(lunchidea: Lunchidea) {
+fun LunchDetails(
+    lunchidea: Lunchidea,
+) {
     Card(
         modifier = Modifier
             .padding(4.dp)
-            .fillMaxWidth()
-            .clickable { },
+            .fillMaxWidth(),
 
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp

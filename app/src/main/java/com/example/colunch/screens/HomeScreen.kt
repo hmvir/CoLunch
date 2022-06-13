@@ -33,8 +33,8 @@ fun HomeScreen(
                         }*/
                 items(lunchideas) { lunchidea ->
                     LunchideaRow(lunchidea = lunchidea,
-                    onItemClick = {
-
+                    onItemClick = { lunchId ->
+                        navController.navigate(route = Screens.DetailLunchscreen.name + "/$lunchId")
                     })
                 }
             }

@@ -1,22 +1,29 @@
 package com.example.colunch.screens
 
 
-import android.widget.EditText
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.example.colunch.models.Lunchidea
+import androidx.navigation.NavHostController
+import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.LunchDetails
-import com.example.colunch.widgets.simpleTextField
 
 @Composable
 fun LunchIdeaDescription(
-    lunchidea: Lunchidea
+    //lunchidea: Lunchidea,
+    navController: NavHostController,
+    lunchId:Long?,
+    lunchViewModel: LunchideasModel
 ) {
-    BottomTopBar(title = lunchidea.restaurant + " " + lunchidea.bestellzeit)
-    LunchDetails(lunchidea = lunchidea)
+    var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
+    if (lunchIdea != null) {
+        BottomTopBar(title =  lunchIdea.restaurant  + ' ' + lunchIdea.bestellzeit) {
+                Log.d("lunch detail", lunchId.toString())
+                LunchDetails(lunchIdea)
+
+        }
+    }
+
 
 
 
