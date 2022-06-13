@@ -8,7 +8,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.example.colunch.models.addToFirestore
 
 @Composable
-fun SimpleTextField() : String {
+fun simpleTextField() : String {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     TextField(
         value = text,
