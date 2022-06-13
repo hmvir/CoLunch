@@ -1,5 +1,8 @@
 package com.example.colunch.widgets
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.TextView
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -14,12 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.example.colunch.models.Lunchidea
+import com.example.colunch.models.Restaurant
 import com.example.colunch.models.addToFirestore
 import com.example.colunch.screens.HomeScreen
 import com.example.colunch.ui.theme.CoLunchTheme
@@ -240,6 +245,59 @@ fun LunchDetails(lunchidea: Lunchidea) {
     }
 }
 
+@ExperimentalAnimationApi
+@Composable
+fun RestaurantRow(restaurant: Restaurant,
+                  content: @Composable () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .clickable { },
+
+        shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+        elevation = 6.dp
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(6.dp),
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(6.dp),
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .size(95.dp)
+                        .padding(3.dp),
+                ) {
+
+                }
+
+                Column {
+                    Text(text = restaurant.name, style = MaterialTheme.typography.h6)
+                    Text(text = restaurant.beschreibung, style = MaterialTheme.typography.body2)
+                }
+
+                Hyperlink(restaurant.website)
+
+            }
+            content()
+        }
+    }
+}
+
+@Composable
+fun Hyperlink(link: String) {
+    val context = LocalContext.current
+    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(link)) }
+
+    Button(onClick = { context.startActivity(intent) }) {
+        Text(text = "Go to website!")
+    }
+}
 
 @Composable
 fun Greeting(name: String) {
