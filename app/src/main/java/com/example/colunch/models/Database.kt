@@ -85,7 +85,7 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
                                 dc.document.data.getValue("Bestellzeit").toString(),
                                 dc.document.data.getValue("Bezahlungsart").toString(),
                                 gesperrt as Boolean,
-                                dc.document.data.getValue("ID") as Int,
+                                dc.document.data.getValue("ID") as Long,
                                 map
                             )
                         lunchideasmodel.addLunchidea(lunchidea)
