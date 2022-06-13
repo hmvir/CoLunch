@@ -85,6 +85,7 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
                                 dc.document.data.getValue("Bestellzeit").toString(),
                                 dc.document.data.getValue("Bezahlungsart").toString(),
                                 gesperrt as Boolean,
+                                dc.document.data.getValue("ID") as Int,
                                 map
                             )
                         lunchideasmodel.addLunchidea(lunchidea)
@@ -108,6 +109,7 @@ fun addLunchideaToFirestore(
         db: FirebaseFirestore,
         restaurant: String,
         gesperrt: Boolean,
+        id: Int,
         bestellzeit: String,
         bezahlungsart: String,
         name: String,
@@ -118,6 +120,7 @@ fun addLunchideaToFirestore(
         "Bezahlungsart" to bezahlungsart,
         "Bestellzeit" to bestellzeit,
         "gesperrt" to gesperrt,
+        "ID" to id,
         "Teilnehmer" to arrayListOf<Map<String,String>>(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)),
 
     )
