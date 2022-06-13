@@ -18,7 +18,7 @@ import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.Greeting
 import com.example.colunch.widgets.SimpleButton
-import com.example.colunch.widgets.SimpleTextField
+import com.example.colunch.widgets.simpleTextField
 
 @Composable
 fun HomeScreen(
@@ -96,7 +96,7 @@ fun HomeScreen(
             {
 
                 Column {
-                    var inputtext = SimpleTextField()
+                    var inputtext = simpleTextField()
                     SimpleButton(inputtext)
                     LazyColumn {
                         items(restaurants) { restaurant ->
