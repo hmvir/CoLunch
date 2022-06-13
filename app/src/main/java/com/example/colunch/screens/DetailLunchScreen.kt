@@ -7,9 +7,22 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.colunch.models.Lunchidea
+import com.example.colunch.widgets.BottomTopBar
+import com.example.colunch.widgets.LunchDetails
 import com.example.colunch.widgets.simpleTextField
 
 @Composable
+fun LunchIdeaDescription(
+    lunchidea: Lunchidea
+) {
+    BottomTopBar(title = lunchidea.restaurant + " " + lunchidea.bestellzeit)
+    LunchDetails(lunchidea = lunchidea)
+
+
+
+}
+
+/*
 fun LunchIdeaDescription(
     lunchidea: Lunchidea
 ) {
@@ -32,4 +45,5 @@ fun LunchIdeaDescription(
 
         }
     }
-}
+
+*/

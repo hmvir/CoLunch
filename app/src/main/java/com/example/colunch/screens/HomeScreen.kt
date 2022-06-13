@@ -32,7 +32,10 @@ fun HomeScreen(
 
                         }*/
                 items(lunchideas) { lunchidea ->
-                    LunchideaRow(lunchidea = lunchidea)
+                    LunchideaRow(lunchidea = lunchidea,
+                    onItemClick = {
+
+                    })
                 }
             }
         }

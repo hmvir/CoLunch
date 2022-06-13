@@ -25,7 +25,7 @@ import com.example.colunch.screens.HomeScreen
 import com.example.colunch.ui.theme.CoLunchTheme
 
 @Composable
-fun simpleTextField() : String {
+fun simpleTextField(): String {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     TextField(
         value = text,
@@ -37,7 +37,7 @@ fun simpleTextField() : String {
 }
 
 @Composable
-fun SimpleButton(inputtext : String) {
+fun SimpleButton(inputtext: String) {
     Button(onClick = {
         addToFirestore(inputtext)
     }) {
@@ -49,7 +49,7 @@ fun SimpleButton(inputtext : String) {
 @Composable
 fun BottomTopBar(
 
-    title : String,
+    title: String,
     content: @Composable () -> Unit = {}
 ) {
     CoLunchTheme {
@@ -58,15 +58,15 @@ fun BottomTopBar(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
-            val selectedItem = remember { mutableStateOf("upload")}
+            val selectedItem = remember { mutableStateOf("upload") }
 
             Scaffold(topBar = {
 
                 TopAppBar(
                     elevation = 3.dp
-                ){
-                    Row{
-                        if(title != "Lunch Ideas") {
+                ) {
+                    Row {
+                        if (title != "Lunch Ideas") {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "ArrowBack",
@@ -76,9 +76,11 @@ fun BottomTopBar(
                             Spacer(modifier = Modifier.width(15.dp))
                         }
 
-                        Text(text = title, style = MaterialTheme.typography.h6, color = Color.White)
-
-
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White
+                        )
 
 
                     }
@@ -92,9 +94,9 @@ fun BottomTopBar(
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Menu , "")
+                                        Icon(Icons.Filled.Menu, "")
                                     },
-                                    label = { Text(text = "Menu")},
+                                    label = { Text(text = "Menu") },
                                     selected = selectedItem.value == "menu",
                                     onClick = {
                                         //result.value = "Save icon clicked"
@@ -105,11 +107,11 @@ fun BottomTopBar(
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Add ,  "")
+                                        Icon(Icons.Filled.Add, "")
                                     },
 
 
-                                    label = { Text(text = "New Idea")},
+                                    label = { Text(text = "New Idea") },
                                     selected = selectedItem.value == "addidea",
                                     onClick = {
                                         //result.value = "Upload icon clicked"
@@ -120,9 +122,9 @@ fun BottomTopBar(
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Place , "")
+                                        Icon(Icons.Filled.Place, "")
                                     },
-                                    label = { Text(text = "Restaurants")},
+                                    label = { Text(text = "Restaurants") },
 
 
                                     selected = selectedItem.value == "restaurants",
@@ -145,16 +147,14 @@ fun BottomTopBar(
     }
 
 }
+
 @ExperimentalAnimationApi
 @Composable
-fun LunchideaRow(lunchidea: Lunchidea,
-             onItemClick: (String) -> Unit = {},
-             content: @Composable () -> Unit = {}
+fun LunchideaRow(
+    lunchidea: Lunchidea,
+    onItemClick: (String) -> Unit = {},
+    content: @Composable () -> Unit = {}
 ) {
-
-    var expandMovieRow by remember {
-        mutableStateOf(false)
-    }
 
     Card(
         modifier = Modifier
@@ -165,7 +165,8 @@ fun LunchideaRow(lunchidea: Lunchidea,
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(6.dp),
         ) {
@@ -194,6 +195,50 @@ fun LunchideaRow(lunchidea: Lunchidea,
     }
 }
 
+@Composable
+fun LunchDetails(lunchidea: Lunchidea) {
+    Card(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+            .clickable { },
+
+        shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+        elevation = 6.dp
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(6.dp),
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(6.dp),
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .size(95.dp)
+                        .padding(3.dp),
+                ) {
+
+                }
+                Column {
+                    Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
+                    Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
+                    Text(text = lunchidea.bezahlungsart, style = MaterialTheme.typography.h6)
+                    for (teilnehmer in lunchidea.teilnehmer) {
+                        Text(teilnehmer.getValue("Name"))
+                        Text(teilnehmer.getValue("Mahlzeit"))
+
+                    }
+
+
+                }
+            }
+        }
+    }
+}
 
 
 @Composable
