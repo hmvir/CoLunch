@@ -12,6 +12,7 @@ import com.example.colunch.models.getRestaurantsFromFirestore
 import com.example.colunch.navigation.MyNavigation
 import com.example.colunch.ui.theme.CoLunchTheme
 import com.example.colunch.widgets.Greeting
+import com.example.colunch.widgets.simpleTextField
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     CoLunchTheme {
-        Greeting("Android")
+        simpleTextField()
     }
 }

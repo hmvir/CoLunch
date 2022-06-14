@@ -42,12 +42,25 @@ fun simpleTextField(): String {
     )
     return text.text
 }
+@Composable
+fun OutLineTextFieldSample(inputtext: String) {
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+    OutlinedTextField(
+        value = text,
+        label = { Text(text = inputtext) },
+        onValueChange = {
+            text = it
+        }
+    )
+}
 
 @Composable
 fun SimpleButton(inputtext: String) {
     Button(modifier = Modifier
         .fillMaxWidth()
-        .padding(10.dp), onClick = {
+        .padding(10.dp),
+
+        onClick = {
 
     }) {
         Text(text = inputtext)
@@ -123,8 +136,7 @@ fun BottomTopBar(
                                     label = { Text(text = "New Idea") },
                                     selected = selectedItem.value == "addidea",
                                     onClick = {
-                                        //result.value = "Upload icon clicked"
-                                        //selectedItem.value = "upload"
+                                        navController.navigate(Screens.AddLunchscreen.name)
                                     },
                                     alwaysShowLabel = false
                                 )

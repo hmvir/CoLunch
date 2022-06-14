@@ -8,9 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.colunch.models.*
-import com.example.colunch.screens.HomeScreen
-import com.example.colunch.screens.DetailLunchScreen
-import com.example.colunch.screens.RestaurantScreen
+import com.example.colunch.screens.*
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.firestore.ktx.firestore
@@ -60,6 +58,10 @@ fun MyNavigation(){
                 restaurantViewModel.getRestaurants(),
             )
         }
+        composable(Screens.AddLunchscreen.name) {
+            AddLunchScreen(navController,restaurantViewModel)
+        }
+
 
     }
 
