@@ -9,7 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.colunch.models.*
 import com.example.colunch.screens.HomeScreen
-import com.example.colunch.screens.LunchIdeaDescription
+import com.example.colunch.screens.DetailLunchScreen
+import com.example.colunch.screens.RestaurantScreen
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.firestore.ktx.firestore
@@ -45,11 +46,18 @@ fun MyNavigation(){
                 type = NavType.StringType
             })
         ) { backStackEntry ->
-            LunchIdeaDescription(
+            DetailLunchScreen(
                 navController = navController,
                 lunchViewModel = lunchViewModel,
                 lunchId = backStackEntry.arguments?.getString("lunchId")?.toLong(),
 
+            )
+        }
+        composable(Screens.Restaurantsscreen.name) {
+            RestaurantScreen(
+                navController,
+                restaurantViewModel,
+                restaurantViewModel.getRestaurants(),
             )
         }
 

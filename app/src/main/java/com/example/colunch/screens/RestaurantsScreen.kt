@@ -20,11 +20,10 @@ fun RestaurantScreen(
     navController: NavController,
     RestaurantViewModel: Restaurantsmodel,
     restaurants: List<Restaurant>,
-    LunchideaViewModel: LunchideasModel,
-    lunchideas: List<Lunchidea>
 ) {
-    BottomTopBar("Restaurants") {
+    BottomTopBar("Restaurants", navController) {
         Column {
+            SimpleButton(inputtext = "Add Restaurant")
             LazyColumn {
                 items(restaurants) { restaurant ->
                     RestaurantRow(restaurant = restaurant)

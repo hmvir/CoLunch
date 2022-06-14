@@ -22,7 +22,7 @@ fun HomeScreen(
     LunchideaViewModel: LunchideasModel,
     lunchideas: List<Lunchidea>
 ) {
-    BottomTopBar("Lunch Ideas") {
+    BottomTopBar("Lunch Ideas",navController) {
         Column {
             //var inputtext = simpleTextField()
             //SimpleButton(inputtext)
@@ -40,8 +40,8 @@ fun HomeScreen(
             }
         }
     }
-
 }
+
 
 
 

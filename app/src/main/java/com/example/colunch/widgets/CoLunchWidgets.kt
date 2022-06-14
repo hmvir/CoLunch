@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -44,18 +45,20 @@ fun simpleTextField(): String {
 
 @Composable
 fun SimpleButton(inputtext: String) {
-    Button(onClick = {
-        addToFirestore(inputtext)
+    Button(modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp), onClick = {
+
     }) {
-        Text(text = "Simple Button")
+        Text(text = inputtext)
     }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BottomTopBar(
-
     title: String,
+    navController: NavController,
     content: @Composable () -> Unit = {}
 ) {
     CoLunchTheme {
@@ -76,7 +79,7 @@ fun BottomTopBar(
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "ArrowBack",
-                                modifier = Modifier.clickable {  /*navController.popBackStack() */ },
+                                modifier = Modifier.clickable { navController.popBackStack() },
                                 tint = Color.White
                             )
                             Spacer(modifier = Modifier.width(15.dp))
@@ -135,8 +138,7 @@ fun BottomTopBar(
 
                                     selected = selectedItem.value == "restaurants",
                                     onClick = {
-                                        //result.value = "Download icon clicked"
-                                        //selectedItem.value = "download"
+                                        navController.navigate(Screens.Restaurantsscreen.name)
                                     },
                                     alwaysShowLabel = false
                                 )
@@ -176,26 +178,18 @@ fun LunchideaRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(6.dp),
         ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(6.dp),
+            Surface(
+                modifier = Modifier
+                    .size(95.dp)
+                    .padding(3.dp),
             ) {
-                Surface(
-                    modifier = Modifier
-                        .size(95.dp)
-                        .padding(3.dp),
-                ) {
-
-                }
                 Column {
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
                     Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
 
                 }
-
             }
+
             content()
         }
     }
@@ -249,8 +243,9 @@ fun LunchDetails(
 
 @ExperimentalAnimationApi
 @Composable
-fun RestaurantRow(restaurant: Restaurant,
-                  content: @Composable () -> Unit = {}
+fun RestaurantRow(
+    restaurant: Restaurant,
+    content: @Composable () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -261,7 +256,8 @@ fun RestaurantRow(restaurant: Restaurant,
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(6.dp),
         ) {
@@ -272,19 +268,15 @@ fun RestaurantRow(restaurant: Restaurant,
             ) {
                 Surface(
                     modifier = Modifier
-                        .size(95.dp)
+                        .fillMaxWidth()
                         .padding(3.dp),
                 ) {
-
+                    Column {
+                        Text(text = restaurant.name, style = MaterialTheme.typography.h6)
+                        Text(text = restaurant.beschreibung, style = MaterialTheme.typography.body2)
+                        Hyperlink(restaurant.website)
+                    }
                 }
-
-                Column {
-                    Text(text = restaurant.name, style = MaterialTheme.typography.h6)
-                    Text(text = restaurant.beschreibung, style = MaterialTheme.typography.body2)
-                }
-
-                Hyperlink(restaurant.website)
-
             }
             content()
         }

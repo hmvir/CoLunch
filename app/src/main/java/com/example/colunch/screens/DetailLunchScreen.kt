@@ -9,7 +9,7 @@ import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.LunchDetails
 
 @Composable
-fun LunchIdeaDescription(
+fun DetailLunchScreen(
     //lunchidea: Lunchidea,
     navController: NavHostController,
     lunchId:Long?,
@@ -17,7 +17,7 @@ fun LunchIdeaDescription(
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
-        BottomTopBar(title =  lunchIdea.restaurant  + ' ' + lunchIdea.bestellzeit) {
+        BottomTopBar(title =  lunchIdea.restaurant  + ' ' + lunchIdea.bestellzeit, navController) {
                 Log.d("lunch detail", lunchId.toString())
                 LunchDetails(lunchIdea)
 
