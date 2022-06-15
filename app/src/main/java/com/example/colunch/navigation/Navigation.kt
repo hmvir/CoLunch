@@ -21,7 +21,7 @@ fun MyNavigation(){
     val lunchViewModel: LunchideasModel = viewModel()
     val restaurantViewModel: Restaurantsmodel = viewModel()
     getRestaurantChangesFromFirestore(db, restaurantViewModel)
-    getLunchideasFromFirestore(db, lunchViewModel, restaurantViewModel)
+    getLunchideasFromFirestore(db, lunchViewModel)
 
     //addLunchideaToFirestore(db,"test",false,"tetst","test","test","test")
     //getIdLunchideaToFirebase(db,"tetst","test1","test1")
@@ -47,7 +47,7 @@ fun MyNavigation(){
             DetailLunchScreen(
                 navController = navController,
                 lunchViewModel = lunchViewModel,
-                lunchId = backStackEntry.arguments?.getString("lunchId")?.toLong(),
+                lunchId = backStackEntry.arguments?.getString("lunchId"),
 
             )
         }

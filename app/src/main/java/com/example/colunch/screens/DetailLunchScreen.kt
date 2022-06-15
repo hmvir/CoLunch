@@ -12,7 +12,7 @@ import com.example.colunch.widgets.LunchDetails
 fun DetailLunchScreen(
     //lunchidea: Lunchidea,
     navController: NavHostController,
-    lunchId:Long?,
+    lunchId:String?,
     lunchViewModel: LunchideasModel
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }

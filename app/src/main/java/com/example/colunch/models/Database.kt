@@ -2,20 +2,11 @@ package com.example.colunch.models
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.util.jar.Attributes
 
 fun addRestaurantToFirestore(db: FirebaseFirestore, beschreibung: String, name: String, website: String){
     val restaurant = hashMapOf(
@@ -65,7 +56,7 @@ fun getRestaurantChangesFromFirestore(db: FirebaseFirestore, restaurantsmodel: R
         }
 }
 
-fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: LunchideasModel, restaurantsmodel: Restaurantsmodel){
+fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: LunchideasModel){
     db.collection("Lunchidea")
         .addSnapshotListener { snapshots, e ->
             if (e != null) {
@@ -79,14 +70,14 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
                         Log.d(TAG, "Added Lunchidea: ${dc.document.data}")
                         val restaurant = dc.document.data.getValue("Restaurant").toString()
                         val gesperrt = dc.document.data.getValue("gesperrt")
-                        val map = dc.document.data.getValue("Teilnehmer") as MutableList<MutableMap<String,String>>
+                        val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
                         val lunchidea = Lunchidea(
                                 restaurant,
                                 dc.document.data.getValue("Bestellzeit").toString(),
                                 dc.document.data.getValue("Bezahlungsart").toString(),
                                 gesperrt as Boolean,
-                                dc.document.data.getValue("ID") as Long,
-                                map
+                                dc.document.id,
+                            map as MutableList<MutableMap<String, String>>
                             )
                         lunchideasmodel.addLunchidea(lunchidea)
                     }

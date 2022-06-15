@@ -7,6 +7,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -42,6 +43,7 @@ fun simpleTextField(): String {
     )
     return text.text
 }
+
 @Composable
 fun OutLineTextFieldSample(inputtext: String) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
@@ -62,7 +64,7 @@ fun SimpleButton(inputtext: String) {
 
         onClick = {
 
-    }) {
+        }) {
         Text(text = inputtext)
     }
 }
@@ -172,7 +174,7 @@ fun BottomTopBar(
 @Composable
 fun LunchideaRow(
     lunchidea: Lunchidea,
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (String) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
 
@@ -198,7 +200,6 @@ fun LunchideaRow(
                 Column {
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
                     Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
-
                 }
             }
 
@@ -214,7 +215,8 @@ fun LunchDetails(
     Card(
         modifier = Modifier
             .padding(4.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            ,
 
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
@@ -225,27 +227,23 @@ fun LunchDetails(
             modifier = Modifier.padding(6.dp),
         ) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(6.dp),
+            Surface(
+                modifier = Modifier
+                    .padding(3.dp)
             ) {
-                Surface(
-                    modifier = Modifier
-                        .size(95.dp)
-                        .padding(3.dp),
-                ) {
-
-                }
                 Column {
+
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
                     Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
-                    Text(text = lunchidea.bezahlungsart, style = MaterialTheme.typography.h6)
+                    Text(text = lunchidea.bezahlungsart, style = MaterialTheme.typography.h2)
+
                     for (teilnehmer in lunchidea.teilnehmer) {
                         Text(teilnehmer.getValue("Name"))
                         Text(teilnehmer.getValue("Mahlzeit"))
 
                     }
-
+                    Divider()
+                    SimpleButton(inputtext = "Teilnehmer hinzufügen")
 
                 }
             }

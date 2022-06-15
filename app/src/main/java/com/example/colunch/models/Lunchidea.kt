@@ -6,7 +6,7 @@ class Lunchidea{
     lateinit var restaurant: String
     lateinit var bestellzeit: String
     lateinit var bezahlungsart: String
-    var id: Long = 0
+    lateinit var id: String
     var gesperrt: Boolean
     lateinit var teilnehmer: MutableList<MutableMap<String,String>>
 
@@ -15,7 +15,7 @@ class Lunchidea{
         _bestellzeit: String,
         _bezahlungsart: String,
         _gesperrt: Boolean,
-        _id: Long
+        _id: String,
     ){
         restaurant = _restaurant
         bestellzeit = _bestellzeit
@@ -30,7 +30,7 @@ class Lunchidea{
         _bestellzeit: String,
         _bezahlungsart: String,
         _gesperrt: Boolean,
-        _id: Long,
+        _id: String,
         _teilnemer: MutableList<MutableMap<String,String>>
 
     ){
