@@ -1,5 +1,6 @@
 package com.example.colunch.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,11 +18,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddOrderScreen(navController: NavHostController,
-                   onClick:(ArrayList<String>) -> Unit={}
+fun OrderScreen(navController: NavHostController,
+                name: String,
+                onClick:(ArrayList<String>) -> Unit={}
                    ) {
     BottomTopBar(title =  "Add Order to Lunchidea", navController) {
-        MainContent(){ orderlist ->
+        MainContent(name){ orderlist ->
             onClick(orderlist)
         }
 
@@ -31,17 +33,33 @@ fun AddOrderScreen(navController: NavHostController,
 
 @Composable
 fun MainContent(
+    name: String,
                 onClick:(ArrayList<String>) -> Unit={}
                 ) {
     Column() {
         var buyer by rememberSaveable { mutableStateOf("") }
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = buyer,
-            onValueChange = { buyer = it },
-            label = { Text("Name") },
-            singleLine = true
-        )
+        if (name.isNullOrEmpty()) {
+            Log.d("OrderScreen", "Add")
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = buyer,
+                onValueChange = { buyer = it },
+                label = { Text("Name") },
+                singleLine = true
+            )
+        }else{
+            Log.d("OrderScreen", "Update")
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = name,
+                onValueChange = { buyer = it },
+                enabled = false,
+                label = { Text("Name") },
+                singleLine = true
+            )
+        }
+
+
         var order by rememberSaveable { mutableStateOf("") }
         TextField(
             modifier = Modifier.fillMaxWidth(),

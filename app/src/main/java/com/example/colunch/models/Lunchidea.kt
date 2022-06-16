@@ -1,5 +1,6 @@
 package com.example.colunch.models
 
+import androidx.compose.runtime.MutableState
 import kotlin.properties.Delegates
 
 class Lunchidea{

@@ -6,5 +6,5 @@ enum class Screens {
     Restaurantsscreen,
     AddRestaurantscreen,
     AddLunchscreen,
-    AddOrderscreen
+    Orderscreen
 }
