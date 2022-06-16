@@ -55,19 +55,15 @@ fun MainContent(
         val snackbarHostState = remember { SnackbarHostState() }
 
 
-        androidx.compose.material.Button(modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
 
-            onClick = {
+            Button(inputtext = "Add Order to Lunchidea"){
                 scope.launch {
                     onClick(arrayListOf(buyer,order))
                     snackbarHostState.showSnackbar("Bestellung erfasst")
                 }
 
-            }) {
-            Text(text = "Add Order to Lunchidea")
-        }
+            }
+
         SnackbarHost(hostState = snackbarHostState)
     }
 
