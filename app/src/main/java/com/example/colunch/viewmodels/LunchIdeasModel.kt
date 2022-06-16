@@ -20,9 +20,9 @@ class LunchideasModel: ViewModel() {
         return lunchideas
     }
 
-    fun removeLunchidea(bestellzeit: String){
+    fun removeLunchidea(id: String){
         for(lunchidea in lunchideas){
-            if(lunchidea.bestellzeit == bestellzeit){
+            if(lunchidea.id == id){
                 lunchideas.remove(lunchidea)
             }
         }

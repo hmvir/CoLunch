@@ -83,11 +83,17 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
                     }
                     DocumentChange.Type.MODIFIED -> {
                         Log.d(TAG, "Modified Lunchidea: ${dc.document.data}")
+                        var lunchidea = lunchideasmodel.getLunchIdea(dc.document.id)
+                        val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
+                        lunchidea.bestellzeit = dc.document.data.getValue("Bestellzeit").toString()
+                        lunchidea.bezahlungsart = dc.document.data.getValue("Bezahlungsart").toString()
+                        lunchidea.teilnehmer = map as MutableList<MutableMap<String, String>>
+
                     }
                     DocumentChange.Type.REMOVED -> {
                         Log.d(TAG, "Removed Lunchidea: ${dc.document.data}")
                         lunchideasmodel.removeLunchidea(
-                            dc.document.data.getValue("Bestellzeit").toString()
+                            dc.document.data.getValue("ID").toString()
                         )
 
                     }
