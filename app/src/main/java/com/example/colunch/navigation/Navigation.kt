@@ -73,8 +73,18 @@ fun MyNavigation(){
         composable(Screens.AddLunchscreen.name) {
             AddLunchScreen(navController,restaurantViewModel)
         }
-
-
+        composable(Screens.AddOrderscreen.name + "/{lunchId}",
+            arguments = listOf(navArgument("lunchId") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+                var lunchidea = lunchViewModel.getLunchIdea(backStackEntry.arguments?.getString("lunchId").toString())
+                AddOrderScreen(navController = navController,
+                ){orderlist ->
+                    addTeilnehmerLunchideaToFirebase(db,lunchidea.id,orderlist[0],orderlist[1])
+                    navController.popBackStack()
+                }
+        }
     }
 
 }

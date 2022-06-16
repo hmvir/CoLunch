@@ -4,11 +4,11 @@ package com.example.colunch.screens
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.example.colunch.models.addTeilnehmerLunchideaToFirebase
+import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
+import com.example.colunch.widgets.Button
 import com.example.colunch.widgets.LunchDetails
-import com.example.colunch.widgets.Order
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
@@ -24,9 +24,11 @@ fun DetailLunchScreen(
         BottomTopBar(title =  lunchIdea.restaurant  + ' ' + lunchIdea.bestellzeit, navController) {
                 Log.d("lunch detail", lunchId.toString())
                 LunchDetails(navController,lunchIdea, db){
-                    Order(navController,db, lunchIdea.id){list->
-                        addTeilnehmerLunchideaToFirebase(db,lunchId.toString(),list[0],list[1])
+                    Button(inputtext = "Add Order"){
+                        navController.navigate(Screens.AddOrderscreen.name+ "/$lunchId")
                     }
+                    
+
                 }
 
 

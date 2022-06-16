@@ -55,44 +55,20 @@ fun OutLineTextFieldSample(inputtext: String) {
         }
     )
 }
-
 @Composable
-fun SimpleButton(
-    navController: NavController,
-    inputtext: String,
-    transaction: String,
-    arrayListOf: ArrayList<String>,
-    db: FirebaseFirestore,
-    id: String,
-    onAddTeilnehmerClick: (ArrayList<String>) -> Unit = {}
-) {
-
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-
+fun Button(inputtext: String,
+           onButtonClick: () -> Unit ={}) {
     Button(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
 
-        onClick = {
-            if (transaction == "order") {
-                scope.launch {
-                    onAddTeilnehmerClick(arrayListOf)
-                    navController.popBackStack()
-                    snackbarHostState.showSnackbar("Bestellung erfasst")
-                }
-
-
-            } else {
-
-            }
+        onClick = { onButtonClick()
 
         }) {
         Text(text = inputtext)
     }
-    SnackbarHost(hostState = snackbarHostState)
 }
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -260,10 +236,7 @@ fun LunchDetails(
 
         ) {
 
-            Surface(
-                modifier = Modifier
-                    .padding(3.dp)
-            ) {
+
                 Column(
                 ) {
 
@@ -283,9 +256,11 @@ fun LunchDetails(
                                 .fillMaxWidth(),
                             elevation = 3.dp,
                             backgroundColor = Color.LightGray) {
-                                Row() {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
                                     Column(modifier = Modifier.padding(3.dp)) {
-
                                         Text(teilnehmer.getValue("Name"))
                                         Text(teilnehmer.getValue("Mahlzeit"))
                                     }
@@ -302,7 +277,7 @@ fun LunchDetails(
 
 
                 }
-            }
+
         }
     }
 }
@@ -359,41 +334,7 @@ fun Hyperlink(link: String) {
     }
 }
 
-@Composable
-fun Order(
-    navController: NavController,
-    db: FirebaseFirestore,
-    id: String,
-    onAddTeilnehmerClick: (ArrayList<String>) -> Unit = {}
-) {
-    var buyer by rememberSaveable { mutableStateOf("") }
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = buyer,
-        onValueChange = { buyer = it },
-        label = { Text("Name") },
-        singleLine = true
-    )
-    var order by rememberSaveable { mutableStateOf("") }
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = order,
-        onValueChange = { order = it },
-        label = { Text("Bestellung") },
-        singleLine = false
-    )
-    SimpleButton(
-        navController,
-        inputtext = "Bestellung hinzufügen",
-        "order",
-        arrayListOf<String>(buyer, order),
-        db,
-        id
-    ) { list ->
-        onAddTeilnehmerClick(list)
-    }
 
-}
 
 @Composable
 fun Greeting(name: String) {
