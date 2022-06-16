@@ -310,9 +310,10 @@ fun Order(){
     var order by rememberSaveable { mutableStateOf("")}
     
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             value = order,
             onValueChange = { order = it },
-            label = { Text("Label") },
+            label = { Text("Meine Bestellung") },
             singleLine = false
         )
 
