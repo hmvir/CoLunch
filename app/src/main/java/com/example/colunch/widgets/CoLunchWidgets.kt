@@ -30,6 +30,7 @@ import com.example.colunch.models.addTeilnehmerLunchideaToFirebase
 import com.example.colunch.navigation.Screens
 import com.example.colunch.ui.theme.CoLunchTheme
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,13 +57,23 @@ fun OutLineTextFieldSample(inputtext: String) {
     )
 }
 @Composable
-fun Button(inputtext: String,
-           onButtonClick: () -> Unit ={}) {
+fun Button(
+    inputtext: String,
+    //scaffoldState: ScaffoldState,
+    onButtonClick: () -> Unit = {}
+) {
+
+    val scope = rememberCoroutineScope()
+
     Button(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
 
-        onClick = { onButtonClick()
+        onClick = {
+           // scope.launch {
+           //     scaffoldState.snackbarHostState.showSnackbar("Bestellung aufgegeben")
+            onButtonClick()
+           // }
 
         }) {
         Text(text = inputtext)

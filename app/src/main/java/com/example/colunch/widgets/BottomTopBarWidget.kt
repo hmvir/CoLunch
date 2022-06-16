@@ -22,6 +22,7 @@ import com.example.colunch.ui.theme.CoLunchTheme
 fun BottomTopBar(
     title: String,
     navController: NavController,
+    scaffoldState: ScaffoldState,
     content: @Composable () -> Unit = {}
 ) {
     CoLunchTheme {
@@ -33,7 +34,9 @@ fun BottomTopBar(
         ) {
             val selectedItem = remember { mutableStateOf("upload") }
 
-            Scaffold(topBar = {
+            Scaffold(
+                scaffoldState = scaffoldState,
+                topBar = {
 
                 TopAppBar(
                     elevation = 3.dp

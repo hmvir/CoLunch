@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +27,10 @@ fun HomeScreen(
     RestaurantViewModel: Restaurantsmodel,
     restaurants: List<Restaurant>,
     LunchideaViewModel: LunchideasModel,
-    lunchideas: List<Lunchidea>
+    lunchideas: List<Lunchidea>,
+    scaffoldState: ScaffoldState
 ) {
-    BottomTopBar("Lunch Ideas",navController) {
+    BottomTopBar("Lunch Ideas",navController, scaffoldState) {
         Column {
             //var inputtext = simpleTextField()
             //SimpleButton(inputtext)

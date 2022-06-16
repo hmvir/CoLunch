@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -19,19 +18,11 @@ import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.OutLineTextFieldSample
 import android.app.TimePickerDialog
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.sp
-import com.example.colunch.R
 import java.util.*
 
 @Composable
@@ -41,7 +32,7 @@ fun AddLunchScreen(navController: NavController, restaurantViewModel: Restaurant
     var mTextFieldSize by remember { mutableStateOf(0)}
     var restaurants = restaurantViewModel.getRestaurants()
 
-    BottomTopBar(title = "Add LunchIdea",navController) {
+    BottomTopBar(title = "Add LunchIdea", navController, scaffoldState = rememberScaffoldState()) {
         Card(modifier = Modifier.padding(10.dp)
         ) {
             Column(modifier = Modifier.padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {

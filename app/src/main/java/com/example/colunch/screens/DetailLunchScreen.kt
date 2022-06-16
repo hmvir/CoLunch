@@ -34,10 +34,15 @@ fun DetailLunchScreen(
     navController: NavHostController,
     lunchId: String?,
     lunchViewModel: LunchideasModel,
+    scaffoldState : ScaffoldState
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
-        BottomTopBar(title = lunchIdea.restaurant + ' ' + lunchIdea.bestellzeit, navController) {
+        BottomTopBar(
+            title = lunchIdea.restaurant + ' ' + lunchIdea.bestellzeit,
+            navController,
+            scaffoldState = rememberScaffoldState()
+        ) {
             Log.d("lunch detail", lunchId.toString())
             LunchDetails(navController,
                 lunchIdea,
