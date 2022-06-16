@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,11 +58,13 @@ fun OutLineTextFieldSample(inputtext: String) {
 
 @Composable
 fun SimpleButton(
+    navController: NavController,
     inputtext: String,
     transaction: String,
     arrayListOf: ArrayList<String>,
     db: FirebaseFirestore,
-    id: String
+    id: String,
+    onAddTeilnehmerClick: (ArrayList<String>) -> Unit = {}
 ) {
 
     val scope = rememberCoroutineScope()
@@ -74,10 +78,11 @@ fun SimpleButton(
         onClick = {
             if (transaction == "order") {
                 scope.launch {
-                addTeilnehmerLunchideaToFirebase(db, id, arrayListOf.get(0), arrayListOf.get(1))
-
+                    onAddTeilnehmerClick(arrayListOf)
+                    navController.popBackStack()
                     snackbarHostState.showSnackbar("Bestellung erfasst")
                 }
+
 
             } else {
 
@@ -182,10 +187,11 @@ fun BottomTopBar(
                     )
 
                 })
-            {
-
-                content()
-
+            {innerPadding ->
+                // Apply the padding globally to the whole BottomNavScreensController
+                Box(modifier = Modifier.padding(innerPadding)) {
+                    content()
+                }
             }
         }
     }
@@ -218,7 +224,6 @@ fun LunchideaRow(
                 modifier = Modifier
                     .size(95.dp)
                     .padding(3.dp),
-
             ) {
                 Column {
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
@@ -233,13 +238,16 @@ fun LunchideaRow(
 
 @Composable
 fun LunchDetails(
+    navController: NavController,
     lunchidea: Lunchidea,
     db: FirebaseFirestore,
+    content: @Composable () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .padding(4.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .fillMaxHeight(),
 
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
@@ -248,7 +256,7 @@ fun LunchDetails(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(6.dp)
-            .verticalScroll(rememberScrollState())
+
 
         ) {
 
@@ -256,19 +264,41 @@ fun LunchDetails(
                 modifier = Modifier
                     .padding(3.dp)
             ) {
-                Column {
+                Column(
+                ) {
 
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
                     Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
-                    Text(text = lunchidea.bezahlungsart, style = MaterialTheme.typography.h2)
+                    Text(
+                        text = "Bezahlungsart: ${lunchidea.bezahlungsart}",
+                        style = MaterialTheme.typography.body2
+                    )
+                    Divider()
+                    LazyColumn(modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .size(300.dp)) {
+                        items(lunchidea.teilnehmer) { teilnehmer ->
+                            Card(modifier = Modifier
+                                .padding(2.dp)
+                                .fillMaxWidth(),
+                            elevation = 3.dp,
+                            backgroundColor = Color.LightGray) {
+                                Row() {
+                                    Column(modifier = Modifier.padding(3.dp)) {
 
-                    for (teilnehmer in lunchidea.teilnehmer) {
-                        Text(teilnehmer.getValue("Name"))
-                        Text(teilnehmer.getValue("Mahlzeit"))
+                                        Text(teilnehmer.getValue("Name"))
+                                        Text(teilnehmer.getValue("Mahlzeit"))
+                                    }
+                                    Icon(imageVector = Icons.Default.Settings, contentDescription ="EditTeilnehmer" )
+
+                                }
+
+                                }
+
+                        }
 
                     }
-
-                    Order(db, lunchidea.id)
+                    content()
 
 
                 }
@@ -330,24 +360,39 @@ fun Hyperlink(link: String) {
 }
 
 @Composable
-fun Order(db: FirebaseFirestore, id: String) {
-    var buyer by rememberSaveable { mutableStateOf("")}
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = buyer,
-            onValueChange = { buyer = it },
-            label = { Text("Name") },
-            singleLine = true
-        )
-    var order by rememberSaveable { mutableStateOf("")}
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = order,
-            onValueChange = { order = it },
-            label = { Text("Bestellung") },
-            singleLine = false
+fun Order(
+    navController: NavController,
+    db: FirebaseFirestore,
+    id: String,
+    onAddTeilnehmerClick: (ArrayList<String>) -> Unit = {}
+) {
+    var buyer by rememberSaveable { mutableStateOf("") }
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = buyer,
+        onValueChange = { buyer = it },
+        label = { Text("Name") },
+        singleLine = true
     )
-    SimpleButton(inputtext = "Bestellung hinzufügen", "order", arrayListOf<String>(buyer, order), db, id)
+    var order by rememberSaveable { mutableStateOf("") }
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = order,
+        onValueChange = { order = it },
+        label = { Text("Bestellung") },
+        singleLine = false
+    )
+    SimpleButton(
+        navController,
+        inputtext = "Bestellung hinzufügen",
+        "order",
+        arrayListOf<String>(buyer, order),
+        db,
+        id
+    ) { list ->
+        onAddTeilnehmerClick(list)
+    }
+
 }
 
 @Composable
