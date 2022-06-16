@@ -5,8 +5,11 @@ import android.net.Uri
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -25,6 +28,7 @@ import com.example.colunch.models.addTeilnehmerLunchideaToFirebase
 import com.example.colunch.navigation.Screens
 import com.example.colunch.ui.theme.CoLunchTheme
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @Composable
 fun simpleTextField(): String {
@@ -58,13 +62,23 @@ fun SimpleButton(
     db: FirebaseFirestore,
     id: String
 ) {
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+
     Button(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
 
         onClick = {
             if (transaction == "order") {
+                scope.launch {
                 addTeilnehmerLunchideaToFirebase(db, id, arrayListOf.get(0), arrayListOf.get(1))
+
+                    snackbarHostState.showSnackbar("Bestellung erfasst")
+                }
+
             } else {
 
             }
@@ -72,6 +86,7 @@ fun SimpleButton(
         }) {
         Text(text = inputtext)
     }
+    SnackbarHost(hostState = snackbarHostState)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -85,6 +100,7 @@ fun BottomTopBar(
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
+
             color = MaterialTheme.colors.background
         ) {
             val selectedItem = remember { mutableStateOf("upload") }
@@ -167,6 +183,7 @@ fun BottomTopBar(
 
                 })
             {
+
                 content()
 
             }
@@ -201,6 +218,7 @@ fun LunchideaRow(
                 modifier = Modifier
                     .size(95.dp)
                     .padding(3.dp),
+
             ) {
                 Column {
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
@@ -221,8 +239,7 @@ fun LunchDetails(
     Card(
         modifier = Modifier
             .padding(4.dp)
-            .fillMaxWidth()
-            ,
+            .fillMaxWidth(),
 
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = 6.dp
@@ -230,7 +247,9 @@ fun LunchDetails(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(6.dp),
+            modifier = Modifier.padding(6.dp)
+            .verticalScroll(rememberScrollState())
+
         ) {
 
             Surface(
@@ -329,9 +348,6 @@ fun Order(db: FirebaseFirestore, id: String) {
             singleLine = false
     )
     SimpleButton(inputtext = "Bestellung hinzufügen", "order", arrayListOf<String>(buyer, order), db, id)
-
-
-
 }
 
 @Composable
