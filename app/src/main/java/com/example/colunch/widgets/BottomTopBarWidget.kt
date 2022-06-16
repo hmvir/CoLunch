@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,20 +67,19 @@ fun BottomTopBar(
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Menu, "")
+                                        Icon(Icons.Filled.Home, "")
                                     },
-                                    label = { Text(text = "Menu") },
-                                    selected = selectedItem.value == "menu",
+                                    label = { Text(text = "Home") },
+                                    selected = selectedItem.value == "home",
                                     onClick = {
-                                        //result.value = "Save icon clicked"
-                                        //selectedItem.value = "save"
+                                        navController.navigate(Screens.Homescreen.name)
                                     },
                                     alwaysShowLabel = false
                                 )
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Add, "")
+                                        Icon(Icons.Filled.AddBox, "")
                                     },
 
 
@@ -97,7 +93,7 @@ fun BottomTopBar(
 
                                 BottomNavigationItem(
                                     icon = {
-                                        Icon(Icons.Filled.Place, "")
+                                        Icon(Icons.Filled.Restaurant, "")
                                     },
                                     label = { Text(text = "Restaurants") },
 
