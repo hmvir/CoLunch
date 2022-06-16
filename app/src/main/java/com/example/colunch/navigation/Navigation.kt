@@ -45,6 +45,7 @@ fun MyNavigation(){
             })
         ) { backStackEntry ->
             DetailLunchScreen(
+                db,
                 navController = navController,
                 lunchViewModel = lunchViewModel,
                 lunchId = backStackEntry.arguments?.getString("lunchId"),

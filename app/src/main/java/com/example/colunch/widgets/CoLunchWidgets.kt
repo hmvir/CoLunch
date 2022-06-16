@@ -2,12 +2,9 @@ package com.example.colunch.widgets
 
 import android.content.Intent
 import android.net.Uri
-import android.widget.TextView
 import androidx.compose.animation.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -19,19 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
 import com.example.colunch.models.Lunchidea
 import com.example.colunch.models.Restaurant
-import com.example.colunch.models.addToFirestore
+import com.example.colunch.models.addTeilnehmerLunchideaToFirebase
 import com.example.colunch.navigation.Screens
-import com.example.colunch.screens.HomeScreen
 import com.example.colunch.ui.theme.CoLunchTheme
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun simpleTextField(): String {
@@ -58,12 +51,23 @@ fun OutLineTextFieldSample(inputtext: String) {
 }
 
 @Composable
-fun SimpleButton(inputtext: String) {
+fun SimpleButton(
+    inputtext: String,
+    transaction: String,
+    arrayListOf: ArrayList<String>,
+    db: FirebaseFirestore,
+    id: String
+) {
     Button(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp),
 
         onClick = {
+            if (transaction == "order") {
+                addTeilnehmerLunchideaToFirebase(db, id, arrayListOf.get(0), arrayListOf.get(1))
+            } else {
+
+            }
 
         }) {
         Text(text = inputtext)
@@ -212,6 +216,7 @@ fun LunchideaRow(
 @Composable
 fun LunchDetails(
     lunchidea: Lunchidea,
+    db: FirebaseFirestore,
 ) {
     Card(
         modifier = Modifier
@@ -243,9 +248,9 @@ fun LunchDetails(
                         Text(teilnehmer.getValue("Mahlzeit"))
 
                     }
-                    Order()
-                    Divider()
-                    SimpleButton(inputtext = "Teilnehmer hinzufügen")
+
+                    Order(db, lunchidea.id)
+
 
                 }
             }
@@ -306,16 +311,26 @@ fun Hyperlink(link: String) {
 }
 
 @Composable
-fun Order(){
+fun Order(db: FirebaseFirestore, id: String) {
+    var buyer by rememberSaveable { mutableStateOf("")}
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = buyer,
+            onValueChange = { buyer = it },
+            label = { Text("Name") },
+            singleLine = true
+        )
     var order by rememberSaveable { mutableStateOf("")}
-    
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = order,
             onValueChange = { order = it },
-            label = { Text("Meine Bestellung") },
+            label = { Text("Bestellung") },
             singleLine = false
-        )
+    )
+    SimpleButton(inputtext = "Bestellung hinzufügen", "order", arrayListOf<String>(buyer, order), db, id)
+
+
 
 }
 

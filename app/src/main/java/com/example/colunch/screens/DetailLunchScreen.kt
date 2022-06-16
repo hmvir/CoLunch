@@ -7,11 +7,12 @@ import androidx.navigation.NavHostController
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.LunchDetails
-import com.example.colunch.widgets.Order
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun DetailLunchScreen(
     //lunchidea: Lunchidea,
+    db: FirebaseFirestore,
     navController: NavHostController,
     lunchId:String?,
     lunchViewModel: LunchideasModel
@@ -20,7 +21,7 @@ fun DetailLunchScreen(
     if (lunchIdea != null) {
         BottomTopBar(title =  lunchIdea.restaurant  + ' ' + lunchIdea.bestellzeit, navController) {
                 Log.d("lunch detail", lunchId.toString())
-                LunchDetails(lunchIdea)
+                LunchDetails(lunchIdea, db)
 
 
         }
