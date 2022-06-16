@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.LunchDetails
+import com.example.colunch.widgets.Order
 
 @Composable
 fun DetailLunchScreen(
@@ -21,8 +22,11 @@ fun DetailLunchScreen(
                 Log.d("lunch detail", lunchId.toString())
                 LunchDetails(lunchIdea)
 
+
         }
+
     }
+
 
 
 
@@ -31,6 +35,7 @@ fun DetailLunchScreen(
 
 /*
 fun LunchIdeaDescription(
+
     lunchidea: Lunchidea
 ) {
     Surface(

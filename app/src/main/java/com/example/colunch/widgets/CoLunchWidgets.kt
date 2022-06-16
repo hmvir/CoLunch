@@ -14,6 +14,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -242,6 +243,7 @@ fun LunchDetails(
                         Text(teilnehmer.getValue("Mahlzeit"))
 
                     }
+                    Order()
                     Divider()
                     SimpleButton(inputtext = "Teilnehmer hinzufügen")
 
@@ -301,6 +303,19 @@ fun Hyperlink(link: String) {
     Button(onClick = { context.startActivity(intent) }) {
         Text(text = "Go to website!")
     }
+}
+
+@Composable
+fun Order(){
+    var order by rememberSaveable { mutableStateOf("")}
+    
+        TextField(
+            value = order,
+            onValueChange = { order = it },
+            label = { Text("Label") },
+            singleLine = false
+        )
+
 }
 
 @Composable
