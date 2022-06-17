@@ -44,7 +44,8 @@ fun DetailLunchScreen(
     lunchId: String?,
     lunchViewModel: LunchideasModel,
     scaffoldState : ScaffoldState,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    onDeleteOrderClick: (String,String) -> Unit ={ s: String, s1: String -> },
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
@@ -63,7 +64,7 @@ fun DetailLunchScreen(
                 scaffoldState,
                 scope,
                 onUpdateOrderClick = {name, orderId -> navController.navigate(Screens.Orderscreen.name + "update?lunchId=$lunchId&orderId=$orderId&name=$name") },
-                onDeleteOrderClick = {orderId -> (deleteOrderFromFirestore(db,lunchIdea.id,orderId)) }
+                onDeleteOrderClick = {orderId -> onDeleteOrderClick(lunchIdea.id, orderId) }
             ) {
 
 

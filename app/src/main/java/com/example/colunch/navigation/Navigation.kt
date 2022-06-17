@@ -77,8 +77,14 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 lunchViewModel = lunchViewModel,
                 lunchId = backStackEntry.arguments?.getString("lunchId"),
                 scaffoldState = scaffoldState,
-                scope = scope
-                )
+                scope = scope,
+
+                ){ lunchId, oderId ->
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar("deleted Order successfully")
+                }
+                deleteOrderFromFirestore(db,lunchId,oderId)
+            }
         }
         composable(Screens.Restaurantsscreen.name) {
             RestaurantScreen(
