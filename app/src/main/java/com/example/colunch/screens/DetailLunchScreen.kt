@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,7 @@ import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
 import com.example.colunch.widgets.Button
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailLunchScreen(
@@ -57,6 +59,8 @@ fun DetailLunchScreen(
                 onDeleteOrderClick = {orderid -> deleteOrderFromFirestore(db,lunchIdea.id,orderid) }
             ) {
                 Button(inputtext = "Add Order") {
+
+
                     navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
                 }
             }

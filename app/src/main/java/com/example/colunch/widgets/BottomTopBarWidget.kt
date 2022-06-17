@@ -9,12 +9,14 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colunch.navigation.Screens
 import com.example.colunch.ui.theme.CoLunchTheme
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -33,6 +35,7 @@ fun BottomTopBar(
             color = MaterialTheme.colors.background
         ) {
             val selectedItem = remember { mutableStateOf("upload") }
+
 
             Scaffold(
                 scaffoldState = scaffoldState,

@@ -19,6 +19,7 @@ import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.*
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -34,6 +35,7 @@ fun HomeScreen(
         Column {
             //var inputtext = simpleTextField()
             //SimpleButton(inputtext)
+
             LazyColumn {/*
                         items(restaurants) { restaurant ->
                             Greeting(name = restaurant.beschreibung)
@@ -43,6 +45,7 @@ fun HomeScreen(
                     LunchideaRow(lunchidea = lunchidea,
                     onItemClick = { lunchId ->
                         navController.navigate(route = Screens.DetailLunchscreen.name + "/$lunchId")
+
                     })
                 }
             }
