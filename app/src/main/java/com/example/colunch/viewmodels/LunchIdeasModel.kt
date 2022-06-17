@@ -8,8 +8,6 @@ class LunchideasModel: ViewModel() {
     private var lunchideas = mutableStateListOf<Lunchidea>()
 
 
-
-
     fun addLunchidea(lunchidea: Lunchidea){
 
             lunchideas.add(lunchidea)

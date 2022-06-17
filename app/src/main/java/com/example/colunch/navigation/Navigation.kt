@@ -45,9 +45,10 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
     //getIdLunchideaToFirebase(db,"tetst","test1","test1")
     //addTeilnehmerLunchideaToFirebase(db,"5YOtTBcbWvwsE4CBKdnF","test3","test3")
 
-    NavHost(navController  = navController,
+    NavHost(
+        navController = navController,
         startDestination = Screens.Homescreen.name
-    ){
+    ) {
         composable(Screens.Homescreen.name) {
             HomeScreen(
                 navController,
@@ -58,7 +59,8 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 scaffoldState
             )
         }
-        composable(Screens.DetailLunchscreen.name + "/{lunchId}",
+        composable(
+            Screens.DetailLunchscreen.name + "/{lunchId}",
             arguments = listOf(navArgument("lunchId") {
                 type = NavType.StringType
             })
@@ -70,7 +72,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 lunchId = backStackEntry.arguments?.getString("lunchId"),
                 scaffoldState = scaffoldState
 
-            )
+                )
         }
         composable(Screens.Restaurantsscreen.name) {
             RestaurantScreen(
@@ -81,34 +83,51 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
         }
 
         composable(Screens.AddLunchscreen.name) {
-            AddLunchScreen(navController,restaurantViewModel)
+            AddLunchScreen(navController, restaurantViewModel)
         }
 
-        composable(Screens.Orderscreen.name + "?lunchId={lunchId}&name={name}&type={type}",
+        composable(
+            Screens.Orderscreen.name + "add?lunchId={lunchId}&name={name}",
             arguments = listOf(
                 navArgument("lunchId") { type = NavType.StringType },
-                navArgument("type") { type = NavType.StringType },
-                navArgument("name") { defaultValue = ""
+                navArgument("name") {
+                    defaultValue = ""
                     nullable = true
-                    type = NavType.StringType },
+                    type = NavType.StringType
+                },
             )
         ) { backStackEntry ->
-                var lunchidea = lunchViewModel.getLunchIdea(backStackEntry.arguments?.getString("lunchId").toString())
-                var name = backStackEntry.arguments?.getString("name").toString()
-                var type = backStackEntry.arguments?.getString("type").toString()
-            Log.d("OrderScreen", type)
-                OrderScreen(navController = navController, name, scaffoldState
-                ){orderlist ->
-                    if(type == "add"){
-                        Log.d("OrderScreen", "Backstack add")
-                        addTeilnehmer(db,lunchidea.id,orderlist[0],orderlist[1])
-                    }
-                    else{
-                        Log.d("OrderScreen", "Backstack Update")
-                    }
-                 /*   addTeilnehmerLunchideaToFirebase(db,lunchidea.id,orderlist[0],orderlist[1])
-                    navController.popBackStack()*/
-                }
+            var lunchId = backStackEntry.arguments?.getString("lunchId").toString()
+
+            var name = backStackEntry.arguments?.getString("name").toString()
+            OrderScreen(
+                navController = navController, name,"Add",scaffoldState
+            ) { orderlist ->
+                Log.d("OrderScreen", "Backstack Add")
+                addOrderToFirestore(db, lunchId, orderlist[0], orderlist[1])
+                navController.popBackStack()
+            }
+
+            /*   addTeilnehmerLunchideaToFirebase(db,lunchidea.id,orderlist[0],orderlist[1])
+               navController.popBackStack()*/
+        }
+        composable(Screens.Orderscreen.name + "update?lunchId={lunchId}&orderId={orderId}&name={name}",
+            arguments = listOf(
+                navArgument("lunchId") { type = NavType.StringType },
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("name") { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            var lunchId = backStackEntry.arguments?.getString("lunchId").toString()
+            var orderId = backStackEntry.arguments?.getString("orderId").toString()
+            var name = backStackEntry.arguments?.getString("name").toString()
+            OrderScreen(navController = navController, name = name, "Update",scaffoldState){ orderlist ->
+                var mahlzeit = orderlist[1]
+                Log.d("OrderScreen", "Backstack Update")
+                updateorderInFirestore(db,lunchId,orderId,mahlzeit)
+                navController.popBackStack()
+            }
+
         }
     }
 

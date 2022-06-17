@@ -17,15 +17,16 @@ import com.example.colunch.widgets.*
 fun OrderScreen(
     navController: NavHostController,
     name: String,
+    type: String,
     scaffoldState : ScaffoldState,
     onClick: (ArrayList<String>) -> Unit = {}
 ) {
     BottomTopBar(
-        title = "Add Order to Lunchidea",
+        title = type +" Order to Lunchidea",
         navController,
         scaffoldState = rememberScaffoldState()
     ) {
-        MainContent(name, scaffoldState) { orderlist ->
+        MainContent(name, type, scaffoldState) { orderlist ->
             onClick(orderlist)
         }
 
@@ -36,6 +37,7 @@ fun OrderScreen(
 @Composable
 fun MainContent(
     name: String,
+    type: String,
     scaffoldState : ScaffoldState,
     onClick: (ArrayList<String>) -> Unit = {}
 ) {
@@ -73,7 +75,7 @@ fun MainContent(
         )
 
 
-        Button(inputtext = "Add Order to Lunchidea") {
+        Button(inputtext = type+" Order to Lunchidea") {
                 onClick(arrayListOf(buyer, order)
 
                 )

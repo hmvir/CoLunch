@@ -8,6 +8,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -154,4 +156,62 @@ fun addToRealtimeDatabase(){
     //myRef.child("n1").push().setValue("Hallo Benjamin")
 
 
+}
+
+fun changeTeilnehmerLunchideaToFirebase(db: FirebaseFirestore,
+                                        id: String,
+                                        name: String,
+                                        mahlzeit: String
+){
+
+
+    val ref = db.collection("Lunchidea").document(id)
+    ref.update("Teilnehmer", FieldValue.arrayRemove(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)))
+
+    /*
+.set(teilnehmer, SetOptions.merge())
+.addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+.addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+     */
+
+}
+
+fun addTeilnehmerLunchideaToFirebase(db: FirebaseFirestore,
+                                     id: String,
+                                     name: String,
+                                     mahlzeit: String
+){
+
+
+    val ref = db.collection("Lunchidea").document(id)
+    ref.update("Teilnehmer", FieldValue.arrayUnion(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)))
+    /*
+.set(teilnehmer, SetOptions.merge())
+.addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+.addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+     */
+
+}
+
+fun getIdLunchideaToFirebase(
+    db: FirebaseFirestore,
+    bestellzeit:String,
+    name: String,
+    mahlzeit: String
+){
+    db.collection("Lunchidea")
+        .get()
+        .addOnSuccessListener { result ->
+            for (document in result) {
+                Log.d("TAG", "${document.id} => ${document.data}")
+                if(document.data.getValue("Bestellzeit").toString() == bestellzeit){
+                    addTeilnehmerLunchideaToFirebase(db,document.id, name, mahlzeit)
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w("TAG", "Error getting documents.", exception)
+        }
 }

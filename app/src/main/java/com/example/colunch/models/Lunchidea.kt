@@ -1,6 +1,8 @@
 package com.example.colunch.models
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import kotlin.properties.Delegates
 
 class Lunchidea{
@@ -9,21 +11,7 @@ class Lunchidea{
     lateinit var bezahlungsart: String
     lateinit var id: String
     var gesperrt: Boolean
-    lateinit var teilnehmer: MutableList<MutableMap<String,String>>
-
-    constructor(
-        _restaurant: String,
-        _bestellzeit: String,
-        _bezahlungsart: String,
-        _gesperrt: Boolean,
-        _id: String,
-    ){
-        restaurant = _restaurant
-        bestellzeit = _bestellzeit
-        bezahlungsart = _bezahlungsart
-        gesperrt = _gesperrt
-        id = _id
-    }
+    var orders = mutableStateListOf<Order>()
 
 
     constructor(
@@ -32,7 +20,7 @@ class Lunchidea{
         _bezahlungsart: String,
         _gesperrt: Boolean,
         _id: String,
-        _teilnemer: MutableList<MutableMap<String,String>>
+
 
     ){
         restaurant = _restaurant
@@ -40,10 +28,17 @@ class Lunchidea{
         bezahlungsart = _bezahlungsart
         gesperrt = _gesperrt
         id = _id
-        teilnehmer = _teilnemer
     }
 
-    fun addTeilnehmer(mutableMap: MutableMap<String,String>){
-        teilnehmer.add(mutableMap)
+    fun addorder(order: Order){
+        orders.add(order)
+    }
+
+    fun getorders(): MutableList<Order>{
+        return orders
+    }
+
+    fun getorder(orderid: String): Order {
+        return getorders().filter { order -> orderid == order.orderID}[0]
     }
 }

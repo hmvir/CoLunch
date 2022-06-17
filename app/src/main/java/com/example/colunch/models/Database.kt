@@ -1,13 +1,14 @@
 package com.example.colunch.models
 
+
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.jar.Attributes
 
 fun addRestaurantToFirestore(db: FirebaseFirestore, beschreibung: String, name: String, website: String){
     val restaurant = hashMapOf(
@@ -57,7 +58,10 @@ fun getRestaurantChangesFromFirestore(db: FirebaseFirestore, restaurantsmodel: R
         }
 }
 
-fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: LunchideasModel){
+fun getLunchideasFromFirestore(
+    db: FirebaseFirestore,
+    lunchideasmodel: LunchideasModel,
+){
     db.collection("Lunchidea")
         .addSnapshotListener { snapshots, e ->
             if (e != null) {
@@ -78,7 +82,7 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
                                 dc.document.data.getValue("Bezahlungsart").toString(),
                                 gesperrt as Boolean,
                                 dc.document.id,
-                                mutableListOf()
+                                //mutableStateListOf()
                                 //map as MutableList<MutableMap<String, String>>
                             )
                         lunchideasmodel.addLunchidea(lunchidea)
@@ -105,9 +109,13 @@ fun getLunchideasFromFirestore(db: FirebaseFirestore, lunchideasmodel: Lunchidea
         }
 }
 
-fun getTeilnehmerFromFirestore(db: FirebaseFirestore, id: String, lunchideasmodel: LunchideasModel){
+fun getTeilnehmerFromFirestore(
+    db: FirebaseFirestore,
+    lunchideaID: String,
+    lunchideasmodel: LunchideasModel,
+){
 
-        db.collection("Lunchidea").document(id).collection("Teilnehmer")
+        db.collection("Lunchidea").document(lunchideaID).collection("Teilnehmer")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     Log.w("TAG", "listen:error", e)
@@ -118,29 +126,42 @@ fun getTeilnehmerFromFirestore(db: FirebaseFirestore, id: String, lunchideasmode
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             Log.d(TAG, "Added Order: ${dc.document.data}")
-                            var lunchidea = lunchideasmodel.getLunchIdea(id)
-                            var order = mutableMapOf<String,String>(
-                                "Name" to dc.document.data.get("Name").toString() ,
-                                "Mahlzeit" to dc.document.data.get("Mahlzeit").toString(),
-                            )
-                            lunchidea.addTeilnehmer(order)
+                            var lunchidea = lunchideasmodel.getLunchIdea(lunchideaID)
+
+                            var order = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString())
+
+                            Log.d("TAG",order.orderID)
+                            lunchidea.addorder(order)
+
 
 
                         }
                         DocumentChange.Type.MODIFIED -> {
                             Log.d(TAG, "Modified Order: ${dc.document.data}")
-                            var lunchidea = lunchideasmodel.getLunchIdea(id)
+                            var lunchidea = lunchideasmodel.getLunchIdea(lunchideaID)
+                            var deleteorder = lunchidea.getorder(dc.document.id)
+                            lunchidea.orders.remove(deleteorder)
+                            var addorder = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString())
+
+                            lunchidea.addorder(addorder)
 
 
                         }
                         DocumentChange.Type.REMOVED -> {
-                            Log.d(TAG, "Modified Order: ${dc.document.data}")
+                            Log.d(TAG, "Removed Order: ${dc.document.data}")
+                            var lunchidea = lunchideasmodel.getLunchIdea(lunchideaID)
+
+                            var order = lunchidea.getorder(dc.document.id)
+                            lunchidea.orders.remove(order)
+
                         }
                     }
                 }
             }
 
 }
+
+
 
 
 fun addLunchideaToFirestore(
@@ -168,7 +189,7 @@ fun addLunchideaToFirestore(
         .add(lunchidea)
         .addOnSuccessListener { documentReference ->
             Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
-            addTeilnehmer(db,documentReference.id,name,mahlzeit)
+            addOrderToFirestore(db,documentReference.id,name,mahlzeit)
         }
         .addOnFailureListener { e ->
             Log.w("TAG", "Error adding document", e)
@@ -178,7 +199,7 @@ fun addLunchideaToFirestore(
 
 }
 
-fun addTeilnehmer(db: FirebaseFirestore,id: String, name: String, mahlzeit: String){
+fun addOrderToFirestore(db: FirebaseFirestore, id: String, name: String, mahlzeit: String){
     db.collection("Lunchidea").document(id).collection("Teilnehmer")
         .add(hashMapOf(
             "Name" to name,
@@ -188,62 +209,18 @@ fun addTeilnehmer(db: FirebaseFirestore,id: String, name: String, mahlzeit: Stri
         ))
 }
 
-fun getIdLunchideaToFirebase(
-    db: FirebaseFirestore,
-    bestellzeit:String,
-    name: String,
-    mahlzeit: String
-    ){
-    db.collection("Lunchidea")
-        .get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                Log.d("TAG", "${document.id} => ${document.data}")
-                if(document.data.getValue("Bestellzeit").toString() == bestellzeit){
-                    addTeilnehmerLunchideaToFirebase(db,document.id, name, mahlzeit)
-                }
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.w("TAG", "Error getting documents.", exception)
-        }
+fun deleteOrderFromFirestore(db: FirebaseFirestore,documentId: String, orderid: String){
+    db.collection("Lunchidea").document(documentId).collection("Teilnehmer").document(orderid)
+        .delete()
 }
 
-fun addTeilnehmerLunchideaToFirebase(db: FirebaseFirestore,
-                                     id: String,
-                                     name: String,
-                                     mahlzeit: String
-                                     ){
-
-
-    val ref = db.collection("Lunchidea").document(id)
-    ref.update("Teilnehmer", FieldValue.arrayUnion(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)))
-            /*
-        .set(teilnehmer, SetOptions.merge())
-        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-
-             */
-
+fun updateorderInFirestore(db: FirebaseFirestore, documentId: String, orderid: String, mahlzeit: String){
+    db.collection("Lunchidea").document(documentId).collection("Teilnehmer").document(orderid)
+        .update("Mahlzeit", mahlzeit)
 }
 
-fun changeTeilnehmerLunchideaToFirebase(db: FirebaseFirestore,
-id: String,
-name: String,
-mahlzeit: String
-){
 
 
-    val ref = db.collection("Lunchidea").document(id)
-    ref.update("Teilnehmer", FieldValue.arrayRemove(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)))
 
-    /*
-.set(teilnehmer, SetOptions.merge())
-.addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-.addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-
-     */
-
-}
 
 
