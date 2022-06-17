@@ -32,6 +32,7 @@ fun AddLunchScreen(navController: NavController,
                    restaurantViewModel: Restaurantsmodel,
                    scaffoldState: ScaffoldState,
                    scope: CoroutineScope,
+                   appid: String,
                    onAddLunchideaClick: (List<String>) -> Unit ={},
                    ) {
 

@@ -44,9 +44,10 @@ fun DetailLunchScreen(
     navController: NavHostController,
     lunchId: String?,
     lunchViewModel: LunchideasModel,
-    scaffoldState : ScaffoldState,
+    scaffoldState: ScaffoldState,
     scope: CoroutineScope,
-    onDeleteOrderClick: (String,String) -> Unit ={ s: String, s1: String -> },
+    appid: String,
+    onDeleteOrderClick: (String, String) -> Unit = { s: String, s1: String -> },
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
@@ -64,11 +65,12 @@ fun DetailLunchScreen(
                 db,
                 scaffoldState,
                 scope,
-                onUpdateOrderClick = {name, orderId -> navController.navigate(Screens.Orderscreen.name + "update?lunchId=$lunchId&orderId=$orderId&name=$name") },
-                onDeleteOrderClick = {orderId -> onDeleteOrderClick(lunchIdea.id, orderId) }
+                appid,
+                onUpdateOrderClick = { name, orderId -> navController.navigate(Screens.Orderscreen.name + "update?lunchId=$lunchId&orderId=$orderId&name=$name") },
+                onDeleteOrderClick = { orderId -> onDeleteOrderClick(lunchIdea.id, orderId) }
             ) {
 
-                if(lunchIdea.gesperrt != true) {
+                if (lunchIdea.gesperrt != true) {
                     Button(modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
@@ -95,9 +97,10 @@ fun LunchDetails(
     navController: NavController,
     lunchidea: Lunchidea,
     db: FirebaseFirestore,
-    scaffoldState : ScaffoldState,
+    scaffoldState: ScaffoldState,
     scope: CoroutineScope,
-    onUpdateOrderClick: (String,String) -> Unit ={ s: String, s1: String -> },
+    appid: String,
+    onUpdateOrderClick: (String, String) -> Unit = { s: String, s1: String -> },
     onDeleteOrderClick: (String) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
@@ -156,29 +159,35 @@ fun LunchDetails(
                                 }
                                 Row(modifier = Modifier.padding(5.dp)) {
 
-                                    if(lunchidea.gesperrt != true){
-                                        Icon(
-                                            imageVector = Icons.Default.Edit,
-                                            contentDescription = "EditOrder",
-                                            Modifier.clickable {
-                                                onUpdateOrderClick(teilnehmer.name, teilnehmer.orderID)
-                                                Log.d(
-                                                    "Update Order",
-                                                    teilnehmer.name
-                                                )
-                                            }
-                                        )
-                                        Box(modifier = Modifier.padding(4.dp))
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = "DeleteOrder",
-                                            Modifier.clickable {
-                                                onDeleteOrderClick(teilnehmer.orderID)
-                                                Log.d(
-                                                    "Delete Order",
-                                                    teilnehmer.name
-                                                )
-                                            })
+                                    if (!lunchidea.gesperrt) {
+                                        if (teilnehmer.appID == appid) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "EditOrder",
+                                                Modifier.clickable {
+                                                    onUpdateOrderClick(
+                                                        teilnehmer.name,
+                                                        teilnehmer.orderID
+                                                    )
+                                                    Log.d(
+                                                        "Update Order",
+                                                        teilnehmer.name
+                                                    )
+                                                }
+                                            )
+                                            Box(modifier = Modifier.padding(4.dp))
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = "DeleteOrder",
+                                                Modifier.clickable {
+                                                    onDeleteOrderClick(teilnehmer.orderID)
+                                                    Log.d(
+                                                        "Delete Order",
+                                                        teilnehmer.name
+                                                    )
+                                                })
+                                        }
+
                                     }
 
                                 }

@@ -34,9 +34,10 @@ fun HomeScreen(
     lunchideas: List<Lunchidea>,
     scaffoldState: ScaffoldState,
     scope: CoroutineScope,
-    onLockLunchscreenClick: (String, Boolean) -> Unit ={ b: String, s: Boolean -> },
+    appid: String,
+    onLockLunchscreenClick: (String, Boolean) -> Unit = { b: String, s: Boolean -> },
 
-) {
+    ) {
     BottomTopBar("Lunch Ideas",navController, scaffoldState, scope) {
         Column {
             //var inputtext = simpleTextField()
@@ -50,6 +51,7 @@ fun HomeScreen(
                 items(lunchideas) { lunchidea ->
                     LunchideaRow(lunchidea = lunchidea,
                         navController = navController,
+                        appid,
                         onLockLunchscreenClick = { lunchId, locked -> onLockLunchscreenClick(lunchId, locked) },
                     onOpenDetailLunchScreenClick = { lunchId ->
                         navController.navigate(route = Screens.DetailLunchscreen.name + "/$lunchId")
@@ -66,6 +68,7 @@ fun HomeScreen(
 fun LunchideaRow(
     lunchidea: Lunchidea,
     navController: NavController,
+    appid: String,
     onOpenDetailLunchScreenClick: (String) -> Unit = {},
     onLockLunchscreenClick: (String, Boolean) -> Unit ={ b: String, s: Boolean -> },
     content: @Composable () -> Unit = {}
@@ -96,7 +99,7 @@ fun LunchideaRow(
                 }
             }
             Row(Modifier.padding(10.dp)) {
-                if(lunchidea.gesperrt == true){
+                if(lunchidea.gesperrt == true && lunchidea.appid == appid){
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "LockLunchidea",
@@ -105,7 +108,7 @@ fun LunchideaRow(
                         }
                     )
                 }
-                else{
+                else if (lunchidea.appid == appid){
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "LockLunchidea",
@@ -121,6 +124,22 @@ fun LunchideaRow(
                         navController.navigate(Screens.UpdateLunchscreen.name + "/update?lunchId=${lunchidea.id}")
                     }
                 )
+                }
+                else if ( lunchidea.gesperrt == true){
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "LockLunchidea",
+                        Modifier.clickable {
+                        }
+                    )
+                }
+                else{
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "LockLunchidea",
+                        Modifier.clickable {
+                        }
+                    )
                 }
             }
 

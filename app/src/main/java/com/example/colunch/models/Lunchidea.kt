@@ -6,6 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import kotlin.properties.Delegates
 
 class Lunchidea{
+    lateinit var appid: String
     lateinit var restaurant: String
     lateinit var bestellzeit: String
     lateinit var bezahlungsart: String
@@ -15,6 +16,7 @@ class Lunchidea{
 
 
     constructor(
+        _appid: String,
         _restaurant: String,
         _bestellzeit: String,
         _bezahlungsart: String,
@@ -23,6 +25,7 @@ class Lunchidea{
 
 
     ){
+        appid = _appid
         restaurant = _restaurant
         bestellzeit = _bestellzeit
         bezahlungsart = _bezahlungsart

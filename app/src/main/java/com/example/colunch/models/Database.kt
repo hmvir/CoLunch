@@ -3,8 +3,6 @@ package com.example.colunch.models
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.firestore.DocumentChange
@@ -77,6 +75,7 @@ fun getLunchideasFromFirestore(
                         val gesperrt = dc.document.data.getValue("gesperrt")
                         //val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
                         val lunchidea = Lunchidea(
+                                dc.document.data.getValue("AppID").toString(),
                                 restaurant,
                                 dc.document.data.getValue("Bestellzeit").toString(),
                                 dc.document.data.getValue("Bezahlungsart").toString(),
@@ -127,7 +126,7 @@ fun getTeilnehmerFromFirestore(
                             Log.d(TAG, "Added Order: ${dc.document.data}")
                             var lunchidea = lunchideasmodel.getLunchIdea(lunchideaID)
 
-                            var order = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString())
+                            var order = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString(),dc.document.data.get("AppID").toString())
 
                             Log.d("TAG",order.orderID)
                             lunchidea.addorder(order)
@@ -140,7 +139,7 @@ fun getTeilnehmerFromFirestore(
                             var lunchidea = lunchideasmodel.getLunchIdea(lunchideaID)
                             var deleteorder = lunchidea.getorder(dc.document.id)
                             lunchidea.orders.remove(deleteorder)
-                            var addorder = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString())
+                            var addorder = Order(dc.document.id,dc.document.data.get("Name").toString(),dc.document.data.get("Mahlzeit").toString(),dc.document.data.get("AppID").toString())
 
                             lunchidea.addorder(addorder)
 
@@ -165,6 +164,7 @@ fun getTeilnehmerFromFirestore(
 
 fun addLunchideaToFirestore(
         db: FirebaseFirestore,
+        appid: String,
         restaurant: String,
         gesperrt: Boolean,
         bestellzeit: String,
@@ -174,6 +174,7 @@ fun addLunchideaToFirestore(
     ){
     val lunchidea = hashMapOf(
         "Restaurant" to restaurant,
+        "AppID" to appid,
         "Bezahlungsart" to bezahlungsart,
         "Bestellzeit" to bestellzeit,
         "gesperrt" to gesperrt,
@@ -185,7 +186,7 @@ fun addLunchideaToFirestore(
         .add(lunchidea)
         .addOnSuccessListener { documentReference ->
             Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
-            addOrderToFirestore(db,documentReference.id,name,mahlzeit)
+            addOrderToFirestore(db,documentReference.id,name,mahlzeit,appid)
         }
         .addOnFailureListener { e ->
             Log.w("TAG", "Error adding document", e)
@@ -195,11 +196,18 @@ fun addLunchideaToFirestore(
 
 }
 
-fun addOrderToFirestore(db: FirebaseFirestore, id: String, name: String, mahlzeit: String){
+fun addOrderToFirestore(
+    db: FirebaseFirestore,
+    id: String,
+    name: String,
+    mahlzeit: String,
+    appid: String
+){
     db.collection("Lunchidea").document(id).collection("Teilnehmer")
         .add(hashMapOf(
             "Name" to name,
             "Mahlzeit" to mahlzeit,
+            "AppID" to appid
             //"Teilnehmer" to arrayListOf<Map<String,String>>(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)),
 
         ))

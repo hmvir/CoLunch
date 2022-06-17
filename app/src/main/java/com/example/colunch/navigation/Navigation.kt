@@ -3,7 +3,6 @@ package com.example.colunch.navigation
 import android.util.Log
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -21,7 +20,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyNavigation(scaffoldState: ScaffoldState) {
+fun MyNavigation(scaffoldState: ScaffoldState, appid: String) {
     val navController = rememberNavController()
     val db = Firebase.firestore
     val lunchViewModel: LunchideasModel = viewModel()
@@ -69,6 +68,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 lunchViewModel.getLunchideas(),
                 scaffoldState,
                 scope,
+                appid
             ){ lunchId, locked ->
                 lockunlocklunchideaInFirestore(db, lunchId, locked)
             }
@@ -87,7 +87,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 lunchId = backStackEntry.arguments?.getString("lunchId"),
                 scaffoldState = scaffoldState,
                 scope = scope,
-
+                appid = appid,
                 ){ lunchId, oderId ->
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar("deleted Order successfully")
@@ -109,10 +109,12 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
             AddLunchScreen(navController,
                 restaurantViewModel,
                 scaffoldState = scaffoldState,
-                scope = scope){ lunchidealist ->
+                scope = scope,
+            appid){ lunchidealist ->
                 Log.d("AddLunch", lunchidealist.toString())
                 addLunchideaToFirestore(
                     db = db,
+                    appid = appid,
                     name = lunchidealist[0],
                     restaurant = lunchidealist[1],
                     bestellzeit = lunchidealist[2],
@@ -162,7 +164,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 scope
             ) { orderlist ->
                 Log.d("OrderScreen", "Backstack Add")
-                addOrderToFirestore(db, lunchId, orderlist[0], orderlist[1])
+                addOrderToFirestore(db, lunchId, orderlist[0], orderlist[1], appid)
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar("added Order successfully")
                 }
