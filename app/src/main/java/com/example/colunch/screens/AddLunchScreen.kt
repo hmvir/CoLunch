@@ -23,16 +23,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
 @Composable
-fun AddLunchScreen(navController: NavController, restaurantViewModel: Restaurantsmodel) {
+fun AddLunchScreen(navController: NavController, restaurantViewModel: Restaurantsmodel, scaffoldState: ScaffoldState, scope: CoroutineScope) {
     var mExpanded by remember { mutableStateOf(true) }
     var mSelectedText by remember { mutableStateOf("") }
     var mTextFieldSize by remember { mutableStateOf(0)}
     var restaurants = restaurantViewModel.getRestaurants()
 
-    BottomTopBar(title = "Add LunchIdea", navController, scaffoldState = rememberScaffoldState()) {
+    BottomTopBar(title = "Add LunchIdea", navController, scaffoldState, scope) {
         Card(modifier = Modifier.padding(10.dp)
         ) {
             Column(modifier = Modifier.padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {

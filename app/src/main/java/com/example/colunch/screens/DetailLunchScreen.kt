@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -32,8 +33,8 @@ import com.example.colunch.models.deleteOrderFromFirestore
 import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
-import com.example.colunch.widgets.Button
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,26 +43,39 @@ fun DetailLunchScreen(
     navController: NavHostController,
     lunchId: String?,
     lunchViewModel: LunchideasModel,
-    scaffoldState : ScaffoldState
+    scaffoldState : ScaffoldState,
+    scope: CoroutineScope
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
         BottomTopBar(
             title = lunchIdea.restaurant + ' ' + lunchIdea.bestellzeit,
             navController,
-            scaffoldState = rememberScaffoldState()
+            scaffoldState,
+            scope
+
         ) {
+
             Log.d("lunch detail", lunchId.toString())
             LunchDetails(navController,
                 lunchIdea,
                 db,
+                scaffoldState,
+                scope,
                 onUpdateOrderClick = {name, orderId -> navController.navigate(Screens.Orderscreen.name + "update?lunchId=$lunchId&orderId=$orderId&name=$name") },
-                onDeleteOrderClick = {orderid -> deleteOrderFromFirestore(db,lunchIdea.id,orderid) }
+                onDeleteOrderClick = {orderId -> (deleteOrderFromFirestore(db,lunchIdea.id,orderId)) }
             ) {
-                Button(inputtext = "Add Order") {
 
 
-                    navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+
+                    onClick = {
+                        navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
+
+                    }) {
+                    Text(text = "Add Order")
                 }
             }
 
@@ -78,6 +92,8 @@ fun LunchDetails(
     navController: NavController,
     lunchidea: Lunchidea,
     db: FirebaseFirestore,
+    scaffoldState : ScaffoldState,
+    scope: CoroutineScope,
     onUpdateOrderClick: (String,String) -> Unit ={ s: String, s1: String -> },
     onDeleteOrderClick: (String) -> Unit = {},
     content: @Composable () -> Unit = {}

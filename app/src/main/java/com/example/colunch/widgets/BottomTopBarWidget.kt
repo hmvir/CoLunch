@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colunch.navigation.Screens
 import com.example.colunch.ui.theme.CoLunchTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -25,6 +26,7 @@ fun BottomTopBar(
     title: String,
     navController: NavController,
     scaffoldState: ScaffoldState,
+    scope: CoroutineScope,
     content: @Composable () -> Unit = {}
 ) {
     CoLunchTheme {
@@ -36,9 +38,9 @@ fun BottomTopBar(
         ) {
             val selectedItem = remember { mutableStateOf("upload") }
 
-
             Scaffold(
                 scaffoldState = scaffoldState,
+
                 topBar = {
 
                 TopAppBar(
@@ -49,7 +51,11 @@ fun BottomTopBar(
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "ArrowBack",
-                                modifier = Modifier.clickable { navController.popBackStack() },
+                                modifier = Modifier.clickable {
+                                    navController.popBackStack()
+
+
+                                                              },
                                 tint = Color.White
                             )
                             Spacer(modifier = Modifier.width(15.dp))
@@ -78,7 +84,11 @@ fun BottomTopBar(
                                     label = { Text(text = "Home") },
                                     selected = selectedItem.value == "home",
                                     onClick = {
-                                        navController.navigate(Screens.Homescreen.name)
+                                        //navController.navigate(Screens.Homescreen.name)
+                                        scope.launch {
+                                            scaffoldState.snackbarHostState
+                                                .showSnackbar("Snackbar")
+                                        }
                                     },
                                     alwaysShowLabel = false
                                 )

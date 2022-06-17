@@ -19,6 +19,7 @@ import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -29,9 +30,10 @@ fun HomeScreen(
     restaurants: List<Restaurant>,
     LunchideaViewModel: LunchideasModel,
     lunchideas: List<Lunchidea>,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
 ) {
-    BottomTopBar("Lunch Ideas",navController, scaffoldState) {
+    BottomTopBar("Lunch Ideas",navController, scaffoldState, scope) {
         Column {
             //var inputtext = simpleTextField()
             //SimpleButton(inputtext)

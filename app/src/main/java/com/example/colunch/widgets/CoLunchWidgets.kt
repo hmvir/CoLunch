@@ -56,29 +56,7 @@ fun OutLineTextFieldSample(inputtext: String) {
         }
     )
 }
-@Composable
-fun Button(
-    inputtext: String,
-    //scaffoldState: ScaffoldState,
-    onButtonClick: () -> Unit = {}
-) {
 
-    val scope = rememberCoroutineScope()
-
-    Button(modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp),
-
-        onClick = {
-           // scope.launch {
-           //     scaffoldState.snackbarHostState.showSnackbar("Bestellung aufgegeben")
-            onButtonClick()
-           // }
-
-        }) {
-        Text(text = inputtext)
-    }
-}
 
 
 

@@ -3,15 +3,16 @@ package com.example.colunch.screens
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.colunch.widgets.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun OrderScreen(
@@ -19,12 +20,14 @@ fun OrderScreen(
     name: String,
     type: String,
     scaffoldState : ScaffoldState,
+    scope: CoroutineScope,
     onClick: (ArrayList<String>) -> Unit = {}
 ) {
     BottomTopBar(
         title = type +" Order to Lunchidea",
         navController,
-        scaffoldState = rememberScaffoldState()
+        scaffoldState,
+        scope
     ) {
         MainContent(name, type, scaffoldState) { orderlist ->
             onClick(orderlist)
@@ -75,13 +78,20 @@ fun MainContent(
         )
 
 
-        Button(inputtext = type+" Order to Lunchidea") {
-                onClick(arrayListOf(buyer, order)
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
 
-                )
-            }
+            onClick = {
+                      onClick(arrayListOf(buyer, order))
+
+            }) {
+            Text(text = type+" Order to Lunchidea")
+        }
+
 
         }
+
 
         //SnackbarHost(hostState = snackbarHostState)
     }
