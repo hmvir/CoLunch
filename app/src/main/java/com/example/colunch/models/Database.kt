@@ -92,6 +92,7 @@ fun getLunchideasFromFirestore(
                         Log.d(TAG, "Modified Lunchidea: ${dc.document.data}")
                         var lunchidea = lunchideasmodel.getLunchIdea(dc.document.id)
                         //val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
+                        lunchidea.gesperrt = dc.document.data.getValue("gesperrt") as Boolean
                         lunchidea.bestellzeit = dc.document.data.getValue("Bestellzeit").toString()
                         lunchidea.bezahlungsart = dc.document.data.getValue("Bezahlungsart").toString()
                         //lunchidea.teilnehmer = map as MutableList<MutableMap<String, String>>
@@ -99,10 +100,8 @@ fun getLunchideasFromFirestore(
                     }
                     DocumentChange.Type.REMOVED -> {
                         Log.d(TAG, "Removed Lunchidea: ${dc.document.data}")
-                        lunchideasmodel.removeLunchidea(
-                            dc.document.data.getValue("ID").toString()
-                        )
-
+                        var lunchidea = lunchideasmodel.getLunchIdea(dc.document.id)
+                        lunchideasmodel.removeLunchidea(lunchidea)
                     }
                 }
             }
@@ -168,7 +167,6 @@ fun addLunchideaToFirestore(
         db: FirebaseFirestore,
         restaurant: String,
         gesperrt: Boolean,
-        id: String,
         bestellzeit: String,
         bezahlungsart: String,
         name: String,
@@ -179,8 +177,6 @@ fun addLunchideaToFirestore(
         "Bezahlungsart" to bezahlungsart,
         "Bestellzeit" to bestellzeit,
         "gesperrt" to gesperrt,
-        "ID" to id,
-        //"Teilnehmer" to arrayListOf<Map<String,String>>(mutableMapOf("Name" to name, "Mahlzeit" to mahlzeit)),
 
     )
 
@@ -217,6 +213,16 @@ fun deleteOrderFromFirestore(db: FirebaseFirestore,documentId: String, orderid: 
 fun updateorderInFirestore(db: FirebaseFirestore, documentId: String, orderid: String, mahlzeit: String){
     db.collection("Lunchidea").document(documentId).collection("Teilnehmer").document(orderid)
         .update("Mahlzeit", mahlzeit)
+}
+
+fun updatelunchideaInFirestore(db: FirebaseFirestore,documentId: String, time: String){
+    db.collection("Lunchidea").document(documentId)
+        .update("Bestellzeit", time)
+}
+
+fun lockunlocklunchideaInFirestore(db: FirebaseFirestore,documentId: String, locked: Boolean){
+    db.collection("Lunchidea").document(documentId)
+        .update("gesperrt", locked)
 }
 
 

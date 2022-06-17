@@ -1,6 +1,7 @@
 package com.example.colunch
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.rememberScaffoldState
@@ -9,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.colunch.navigation.MyNavigation
 import com.example.colunch.ui.theme.CoLunchTheme
 import com.example.colunch.widgets.simpleTextField
+import com.google.firebase.installations.FirebaseInstallations
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

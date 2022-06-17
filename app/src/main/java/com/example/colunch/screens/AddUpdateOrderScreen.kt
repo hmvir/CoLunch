@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun OrderScreen(
+fun AddUpdateOrderScreen(
     navController: NavHostController,
     name: String,
     type: String,

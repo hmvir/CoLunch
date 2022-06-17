@@ -18,16 +18,13 @@ class LunchideasModel: ViewModel() {
         return lunchideas
     }
 
-    fun removeLunchidea(id: String){
-        for(lunchidea in lunchideas){
-            if(lunchidea.id == id){
-                lunchideas.remove(lunchidea)
-            }
-        }
-    }
 
     fun getLunchIdea(id: String): Lunchidea {
         return getLunchideas().filter { lunch -> lunch.id == id}[0]
+    }
+
+    fun removeLunchidea(lunchidea: Lunchidea) {
+        lunchideas.remove(lunchidea)
     }
 
 }

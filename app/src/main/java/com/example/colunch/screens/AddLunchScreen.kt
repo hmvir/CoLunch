@@ -16,40 +16,53 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.BottomTopBar
-import com.example.colunch.widgets.OutLineTextFieldSample
+import com.example.colunch.widgets.OutLineTextField
 import android.app.TimePickerDialog
-import androidx.compose.foundation.layout.*
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import com.example.colunch.viewmodels.LunchideasModel
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
 @Composable
-fun AddLunchScreen(navController: NavController, restaurantViewModel: Restaurantsmodel, scaffoldState: ScaffoldState, scope: CoroutineScope) {
-    var mExpanded by remember { mutableStateOf(true) }
-    var mSelectedText by remember { mutableStateOf("") }
-    var mTextFieldSize by remember { mutableStateOf(0)}
-    var restaurants = restaurantViewModel.getRestaurants()
+fun AddLunchScreen(navController: NavController,
+                   restaurantViewModel: Restaurantsmodel,
+                   scaffoldState: ScaffoldState,
+                   scope: CoroutineScope,
+                   onAddLunchideaClick: (List<String>) -> Unit ={},
+                   ) {
+
 
     BottomTopBar(title = "Add LunchIdea", navController, scaffoldState, scope) {
         Card(modifier = Modifier.padding(10.dp)
         ) {
-            Column(modifier = Modifier.padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                OutLineTextFieldSample("Name")
-                DropDown(restaurantViewModel)
-                OutLineTextFieldSample("Bestellung")
-                TimePicker()
-                DropDownPayment()
-            }
+
+                Column(modifier = Modifier.padding(5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    var name = OutLineTextField("Name")
+                    var restaurant = DropDown(restaurantViewModel)
+                    var mahlzeit = OutLineTextField("Bestellung")
+                    var time = TimePicker()
+                    var bezahlungsart = DropDownPayment()
+                    /*    Log.d("AddLunchidea", "Name: " + name)
+                        Log.d("AddLunchidea", "Restaurant: "+ restaurant)
+                        Log.d("AddLunchidea", "Bestellung: " + bestellung)
+                        Log.d("AddLunchidea", "Zeit: " + time)
+                        Log.d("AddLunchidea", "Bezahlungsart: " + bezahlungsart)*/
+                    Button(onClick = { onAddLunchideaClick(mutableListOf(name,restaurant,time,bezahlungsart,mahlzeit)) }) {
+                        Text(text = "Add Lunchidea")
+                    }
+                }
+
         }
     }
 
 }
 
 @Composable
-fun DropDown(restaurantViewModel: Restaurantsmodel){
+fun DropDown(restaurantViewModel: Restaurantsmodel) : String{
 
     // Declaring a boolean value to store
     // the expanded state of the Text Field
@@ -96,11 +109,12 @@ fun DropDown(restaurantViewModel: Restaurantsmodel){
             }
         }
     }
+    return mSelectedText
 }
 
 @OptIn(ExperimentalGraphicsApi::class)
 @Composable
-fun TimePicker(){
+fun TimePicker(): String {
 
     // Fetching local context
     val mContext = LocalContext.current
@@ -113,11 +127,17 @@ fun TimePicker(){
     // Value for storing time as a string
     val mTime = remember { mutableStateOf("") }
 
-    // Creating a TimePicker dialod
+    // Creating a TimePicker dialog
     val mTimePickerDialog = TimePickerDialog(
         mContext,
         {_, mHour : Int, mMinute: Int ->
-            mTime.value = "$mHour:$mMinute"
+            if(mMinute.toString().length !=1){
+                mTime.value = "$mHour:$mMinute"
+            }
+            else{
+                mTime.value = "$mHour:0$mMinute"
+            }
+
         }, mHour, mMinute, false
     )
 
@@ -125,10 +145,11 @@ fun TimePicker(){
         {
             Text("Bestelluhrzeit: ${mTime.value}")
         }
+    return mTime.value
 }
 
 @Composable
-fun DropDownPayment(){
+fun DropDownPayment() : String{
 
     // Declaring a boolean value to store
     // the expanded state of the Text Field
@@ -187,4 +208,5 @@ fun DropDownPayment(){
             }
         }
     }
+    return mSelectedText.toString()
 }

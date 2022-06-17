@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,16 +68,17 @@ fun DetailLunchScreen(
                 onDeleteOrderClick = {orderId -> onDeleteOrderClick(lunchIdea.id, orderId) }
             ) {
 
+                if(lunchIdea.gesperrt != true) {
+                    Button(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
 
-                Button(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
+                        onClick = {
+                            navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
 
-                    onClick = {
-                        navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
-
-                    }) {
-                    Text(text = "Add Order")
+                        }) {
+                        Text(text = "Add Order")
+                    }
                 }
             }
 
@@ -154,28 +156,31 @@ fun LunchDetails(
                                 }
                                 Row(modifier = Modifier.padding(5.dp)) {
 
-                                    Icon(
-                                        imageVector = Icons.Default.Settings,
-                                        contentDescription = "EditOrder",
-                                        Modifier.clickable {
-                                            onUpdateOrderClick(teilnehmer.name, teilnehmer.orderID)
-                                            Log.d(
-                                              "Update Order",
-                                            teilnehmer.name
-                                            )
-                                        }
+                                    if(lunchidea.gesperrt != true){
+                                        Icon(
+                                            imageVector = Icons.Default.Edit,
+                                            contentDescription = "EditOrder",
+                                            Modifier.clickable {
+                                                onUpdateOrderClick(teilnehmer.name, teilnehmer.orderID)
+                                                Log.d(
+                                                    "Update Order",
+                                                    teilnehmer.name
+                                                )
+                                            }
                                         )
-                                    Box(modifier = Modifier.padding(4.dp))
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "DeleteOrder",
-                                        Modifier.clickable {
-                                            onDeleteOrderClick(teilnehmer.orderID)
-                                            Log.d(
-                                                "Delete Order",
-                                                teilnehmer.name
-                                            )
-                                        })
+                                        Box(modifier = Modifier.padding(4.dp))
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "DeleteOrder",
+                                            Modifier.clickable {
+                                                onDeleteOrderClick(teilnehmer.orderID)
+                                                Log.d(
+                                                    "Delete Order",
+                                                    teilnehmer.name
+                                                )
+                                            })
+                                    }
+
                                 }
 
 

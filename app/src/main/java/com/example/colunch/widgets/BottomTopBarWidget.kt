@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -67,7 +64,6 @@ fun BottomTopBar(
                             color = Color.White
                         )
 
-
                     }
                 }
 
@@ -84,10 +80,10 @@ fun BottomTopBar(
                                     label = { Text(text = "Home") },
                                     selected = selectedItem.value == "home",
                                     onClick = {
-                                        //navController.navigate(Screens.Homescreen.name)
+                                        navController.navigate(Screens.Homescreen.name)
                                         scope.launch {
                                             scaffoldState.snackbarHostState
-                                                .showSnackbar("Snackbar")
+                                                .showSnackbar("Homescreen")
                                         }
                                     },
                                     alwaysShowLabel = false

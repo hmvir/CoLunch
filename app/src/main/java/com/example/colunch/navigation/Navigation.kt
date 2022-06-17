@@ -3,6 +3,7 @@ package com.example.colunch.navigation
 import android.util.Log
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -15,6 +16,7 @@ import com.example.colunch.screens.*
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -26,9 +28,19 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
     val restaurantViewModel: Restaurantsmodel = viewModel()
     val scope = rememberCoroutineScope()
 
-
     getRestaurantChangesFromFirestore(db, restaurantViewModel)
     getLunchideasFromFirestore(db, lunchViewModel)
+
+    FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            Log.d("Installations", "Installation ID: " + task.result)
+            var installationID = task.result.toString()
+        } else {
+            Log.e("Installations", "Unable to get Installation ID")
+        }
+    }
+
+
     //getTeilnehmerFromFirestore(db,lunchViewModel)
 
     /*
@@ -36,13 +48,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
         Log.d("TAG", element.teilnehmer.toString())
     }
 
-    FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            Log.d("Installations", "Installation ID: " + task.result)
-        } else {
-            Log.e("Installations", "Unable to get Installation ID")
-        }
-    }
+
 
  */
     //changeTeilnehmerLunchideaToFirebase(db,"I8Rr90LTS5GDM9TJ2snz","Hami","test")
@@ -62,8 +68,11 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
                 lunchViewModel,
                 lunchViewModel.getLunchideas(),
                 scaffoldState,
-                scope
-            )
+                scope,
+            ){ lunchId, locked ->
+                lockunlocklunchideaInFirestore(db, lunchId, locked)
+            }
+
         }
         composable(
             Screens.DetailLunchscreen.name + "/{lunchId}",
@@ -100,7 +109,36 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
             AddLunchScreen(navController,
                 restaurantViewModel,
                 scaffoldState = scaffoldState,
-                scope = scope)
+                scope = scope){ lunchidealist ->
+                Log.d("AddLunch", lunchidealist.toString())
+                addLunchideaToFirestore(
+                    db = db,
+                    name = lunchidealist[0],
+                    restaurant = lunchidealist[1],
+                    bestellzeit = lunchidealist[2],
+                    bezahlungsart =lunchidealist [3],
+                    mahlzeit = lunchidealist[4],
+                gesperrt = false)
+                navController.popBackStack()
+            }
+        }
+
+        composable(Screens.UpdateLunchscreen.name + "/update?lunchId={lunchId}",
+            arguments = listOf(navArgument("lunchId") {
+                type = NavType.StringType
+            })
+            ){ backStackEntry ->
+            var lunchId = backStackEntry.arguments?.getString("lunchId").toString()
+            UpdateLunchScreen(
+                navController = navController,
+                lunchideasModel= lunchViewModel,
+                lunchId = lunchId,
+                scaffoldState = scaffoldState,
+                scope = scope
+            ){ time ->
+                updatelunchideaInFirestore(db,lunchId,time)
+                navController.popBackStack()
+            }
         }
 
         composable(
@@ -115,9 +153,8 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
             )
         ) { backStackEntry ->
             var lunchId = backStackEntry.arguments?.getString("lunchId").toString()
-
             var name = backStackEntry.arguments?.getString("name").toString()
-            OrderScreen(
+            AddUpdateOrderScreen(
                 navController = navController,
                 name,
                 "Add",
@@ -145,7 +182,7 @@ fun MyNavigation(scaffoldState: ScaffoldState) {
             var lunchId = backStackEntry.arguments?.getString("lunchId").toString()
             var orderId = backStackEntry.arguments?.getString("orderId").toString()
             var name = backStackEntry.arguments?.getString("name").toString()
-            OrderScreen(navController = navController, name = name, "Update",scaffoldState, scope){ orderlist ->
+            AddUpdateOrderScreen(navController = navController, name = name, "Update",scaffoldState, scope){ orderlist ->
                 var mahlzeit = orderlist[1]
                 Log.d("OrderScreen", "Backstack Update")
                 updateorderInFirestore(db,lunchId,orderId,mahlzeit)

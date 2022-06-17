@@ -46,7 +46,7 @@ fun simpleTextField(): String {
 }
 
 @Composable
-fun OutLineTextFieldSample(inputtext: String) {
+fun OutLineTextField(inputtext: String) : String {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     OutlinedTextField(
         value = text,
@@ -55,6 +55,7 @@ fun OutLineTextFieldSample(inputtext: String) {
             text = it
         }
     )
+    return text.text
 }
 
 
