@@ -130,16 +130,21 @@ fun TimePicker(): Timestamp {
 
     // Value for storing time as a string
     val mTime = remember { mutableStateOf("") }
-
+    val mTimeHour = remember { mutableStateOf(0) }
+    val mTimeMinute = remember { mutableStateOf(0) }
     // Creating a TimePicker dialog
     val mTimePickerDialog = TimePickerDialog(
         mContext,
         {_, mHour : Int, mMinute: Int ->
             if(mMinute.toString().length !=1){
                 mTime.value = "$mHour:$mMinute"
+                mTimeHour.value = mHour
+                mTimeMinute.value = mMinute
             }
             else{
                 mTime.value = "$mHour:0$mMinute"
+                mTimeHour.value = mHour
+                mTimeMinute.value = mMinute
             }
 
         }, mHour, mMinute, false
@@ -149,12 +154,12 @@ fun TimePicker(): Timestamp {
     val day = datetime.dayOfMonth
     val month = datetime.month.value
     val year = datetime.year
-    val hour = mHour
-    val minute = mMinute
-    //val unixtime = Timestamp(Date()
-    Log.d("timestamp", "$day $month $year")
-    val timestamp = Timestamp(Date(year-1900,month-1,day,hour,minute))
+    val hour = mTimeHour.value
+    val minute = mTimeMinute.value
 
+
+    val timestamp = Timestamp(Date(year-1900,month-1,day,hour,minute))
+    Log.d("timestamp", timestamp.seconds.toString())
 
 
 

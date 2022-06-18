@@ -34,6 +34,7 @@ import com.example.colunch.models.deleteOrderFromFirestore
 import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.widgets.BottomTopBar
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -53,8 +54,12 @@ fun DetailLunchScreen(
 ) {
     var lunchIdea = lunchId?.let { lunchViewModel.getLunchIdea(it) }
     if (lunchIdea != null) {
+        val timeD1 = Date(lunchIdea.bestellzeit * 1000)
+        val sdf1 = SimpleDateFormat("HH:mm")
+        val Time1: String = sdf1.format(timeD1)
         BottomTopBar(
-            title = lunchIdea.restaurant + ' ' + lunchIdea.bestellzeit,
+
+            title = lunchIdea.restaurant + ' ' + Time1,
             navController,
             scaffoldState,
             scope
@@ -73,16 +78,19 @@ fun DetailLunchScreen(
             ) {
 
                 if (lunchIdea.gesperrt != true) {
-                    Button(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
+                    if(lunchIdea.bestellzeit > Timestamp.now().seconds ){
+                        Button(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
 
-                        onClick = {
-                            navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
+                            onClick = {
+                                navController.navigate(Screens.Orderscreen.name + "add?lunchId=$lunchId")
 
-                        }) {
-                        Text(text = "Add Order")
+                            }) {
+                            Text(text = "Add Order")
+                        }
                     }
+
                 }
             }
 
@@ -166,8 +174,9 @@ fun LunchDetails(
                                 }
                                 Row(modifier = Modifier.padding(5.dp)) {
 
-                                    if (!lunchidea.gesperrt) {
-                                        if (teilnehmer.appID == appid) {
+                                    if (!lunchidea.gesperrt ) {
+                                        if(lunchidea.bestellzeit < Timestamp.now().seconds)
+                                        else if (teilnehmer.appID == appid) {
                                             Icon(
                                                 imageVector = Icons.Default.Edit,
                                                 contentDescription = "EditOrder",
