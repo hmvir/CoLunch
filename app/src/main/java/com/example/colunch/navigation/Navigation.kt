@@ -110,16 +110,16 @@ fun MyNavigation(scaffoldState: ScaffoldState, appid: String) {
                 restaurantViewModel,
                 scaffoldState = scaffoldState,
                 scope = scope,
-            appid){ lunchidealist ->
+            appid){ lunchidealist, timestamp ->
                 Log.d("AddLunch", lunchidealist.toString())
                 addLunchideaToFirestore(
                     db = db,
                     appid = appid,
                     name = lunchidealist[0],
                     restaurant = lunchidealist[1],
-                    bestellzeit = lunchidealist[2],
-                    bezahlungsart =lunchidealist [3],
-                    mahlzeit = lunchidealist[4],
+                    bestellzeit = timestamp,
+                    bezahlungsart =lunchidealist [2],
+                    mahlzeit = lunchidealist[3],
                 gesperrt = false)
                 navController.popBackStack()
             }

@@ -24,7 +24,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import com.example.colunch.viewmodels.LunchideasModel
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.CoroutineScope
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 @Composable
@@ -33,7 +36,7 @@ fun AddLunchScreen(navController: NavController,
                    scaffoldState: ScaffoldState,
                    scope: CoroutineScope,
                    appid: String,
-                   onAddLunchideaClick: (List<String>) -> Unit ={},
+                   onAddLunchideaClick: (List<String>, Timestamp) -> Unit ={ list: List<String>, timestamp: Timestamp -> },
                    ) {
 
 
@@ -52,7 +55,7 @@ fun AddLunchScreen(navController: NavController,
                         Log.d("AddLunchidea", "Bestellung: " + bestellung)
                         Log.d("AddLunchidea", "Zeit: " + time)
                         Log.d("AddLunchidea", "Bezahlungsart: " + bezahlungsart)*/
-                    Button(onClick = { onAddLunchideaClick(mutableListOf(name,restaurant,time,bezahlungsart,mahlzeit)) }) {
+                    Button(onClick = { onAddLunchideaClick(mutableListOf(name,restaurant,bezahlungsart,mahlzeit),time) }) {
                         Text(text = "Add Lunchidea")
                     }
                 }
@@ -115,7 +118,7 @@ fun DropDown(restaurantViewModel: Restaurantsmodel) : String{
 
 @OptIn(ExperimentalGraphicsApi::class)
 @Composable
-fun TimePicker(): String {
+fun TimePicker(): Timestamp {
 
     // Fetching local context
     val mContext = LocalContext.current
@@ -142,11 +145,24 @@ fun TimePicker(): String {
         }, mHour, mMinute, false
     )
 
+    val datetime = LocalDateTime.now()
+    val day = datetime.dayOfMonth
+    val month = datetime.month.value
+    val year = datetime.year
+    val hour = mHour
+    val minute = mMinute
+    //val unixtime = Timestamp(Date()
+    Log.d("timestamp", "$day $month $year")
+    val timestamp = Timestamp(Date(year-1900,month-1,day,hour,minute))
+
+
+
+
         OutlinedButton(onClick = { mTimePickerDialog.show() }, Modifier.padding(20.dp))
         {
             Text("Bestelluhrzeit: ${mTime.value}")
         }
-    return mTime.value
+    return timestamp
 }
 
 @Composable

@@ -22,7 +22,10 @@ import com.example.colunch.navigation.Screens
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
 import com.example.colunch.widgets.*
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.CoroutineScope
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -95,11 +98,22 @@ fun LunchideaRow(
             ) {
                 Column(modifier = Modifier.width(100.dp)) {
                     Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
-                    Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
+                    val timeD = Date(lunchidea.bestellzeit * 1000)
+                    val sdf = SimpleDateFormat("HH:mm")
+                    val Time: String = sdf.format(timeD)
+                    Text("Zeit: ${Time}", style = MaterialTheme.typography.body2)
                 }
             }
             Row(Modifier.padding(10.dp)) {
-                if(lunchidea.gesperrt == true && lunchidea.appid == appid){
+                if (lunchidea.bestellzeit < Timestamp.now().seconds){
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "LockLunchidea",
+                        Modifier.clickable {
+                        }
+                    )
+                }
+                else if(lunchidea.gesperrt && lunchidea.appid == appid){
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "LockLunchidea",

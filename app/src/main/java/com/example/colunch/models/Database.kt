@@ -5,8 +5,12 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import com.example.colunch.viewmodels.LunchideasModel
 import com.example.colunch.viewmodels.Restaurantsmodel
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 fun addRestaurantToFirestore(db: FirebaseFirestore, beschreibung: String, name: String, website: String){
     val restaurant = hashMapOf(
@@ -73,26 +77,39 @@ fun getLunchideasFromFirestore(
                         Log.d(TAG, "Added Lunchidea: ${dc.document.data}")
                         val restaurant = dc.document.data.getValue("Restaurant").toString()
                         val gesperrt = dc.document.data.getValue("gesperrt")
+                        val  bestellzeit = dc.document.data.getValue("Bestellzeit") as Timestamp
                         //val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
                         val lunchidea = Lunchidea(
                                 dc.document.data.getValue("AppID").toString(),
                                 restaurant,
-                                dc.document.data.getValue("Bestellzeit").toString(),
+                                bestellzeit.seconds,
                                 dc.document.data.getValue("Bezahlungsart").toString(),
                                 gesperrt as Boolean,
                                 dc.document.id,
                                 //mutableStateListOf()
                                 //map as MutableList<MutableMap<String, String>>
                             )
+                        /*
+                        val timestamp = dc.document.data.getValue("timestamp") as Timestamp
+
+                        val timeD = Date(timestamp.seconds * 1000)
+                        val sdf = SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss")
+                        val Time: String = sdf.format(timeD)
+                        Log.d("timestamp", Time)
+                        */
+
+
+
                         lunchideasmodel.addLunchidea(lunchidea)
                         getTeilnehmerFromFirestore(db,dc.document.id, lunchideasmodel)
                     }
                     DocumentChange.Type.MODIFIED -> {
                         Log.d(TAG, "Modified Lunchidea: ${dc.document.data}")
                         var lunchidea = lunchideasmodel.getLunchIdea(dc.document.id)
+                        val  bestellzeit = dc.document.data.getValue("Bestellzeit") as Timestamp
                         //val map = dc.document.data.getValue("Teilnehmer") as MutableList<*>
                         lunchidea.gesperrt = dc.document.data.getValue("gesperrt") as Boolean
-                        lunchidea.bestellzeit = dc.document.data.getValue("Bestellzeit").toString()
+                        lunchidea.bestellzeit = bestellzeit.seconds
                         lunchidea.bezahlungsart = dc.document.data.getValue("Bezahlungsart").toString()
                         //lunchidea.teilnehmer = map as MutableList<MutableMap<String, String>>
 
@@ -163,14 +180,14 @@ fun getTeilnehmerFromFirestore(
 
 
 fun addLunchideaToFirestore(
-        db: FirebaseFirestore,
-        appid: String,
-        restaurant: String,
-        gesperrt: Boolean,
-        bestellzeit: String,
-        bezahlungsart: String,
-        name: String,
-        mahlzeit: String,
+    db: FirebaseFirestore,
+    appid: String,
+    restaurant: String,
+    gesperrt: Boolean,
+    bestellzeit: Timestamp,
+    bezahlungsart: String,
+    name: String,
+    mahlzeit: String,
     ){
     val lunchidea = hashMapOf(
         "Restaurant" to restaurant,
@@ -178,8 +195,7 @@ fun addLunchideaToFirestore(
         "Bezahlungsart" to bezahlungsart,
         "Bestellzeit" to bestellzeit,
         "gesperrt" to gesperrt,
-
-    )
+        )
 
     // Add a new document with a generated ID
     db.collection("Lunchidea")
@@ -223,7 +239,7 @@ fun updateorderInFirestore(db: FirebaseFirestore, documentId: String, orderid: S
         .update("Mahlzeit", mahlzeit)
 }
 
-fun updatelunchideaInFirestore(db: FirebaseFirestore,documentId: String, time: String){
+fun updatelunchideaInFirestore(db: FirebaseFirestore, documentId: String, time: Timestamp){
     db.collection("Lunchidea").document(documentId)
         .update("Bestellzeit", time)
 }

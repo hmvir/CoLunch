@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import com.example.colunch.viewmodels.LunchideasModel
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
@@ -33,7 +34,7 @@ fun UpdateLunchScreen(navController: NavController,
                    lunchId: String = "",
                    scaffoldState: ScaffoldState,
                    scope: CoroutineScope,
-                   onUpdateLunchideaClick: (String) -> Unit ={},
+                   onUpdateLunchideaClick: (Timestamp) -> Unit ={},
 ) {
 
 

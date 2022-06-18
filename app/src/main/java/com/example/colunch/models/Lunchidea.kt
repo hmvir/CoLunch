@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 class Lunchidea{
     lateinit var appid: String
     lateinit var restaurant: String
-    lateinit var bestellzeit: String
+    var bestellzeit by Delegates.notNull<Long>()
     lateinit var bezahlungsart: String
     lateinit var id: String
     var gesperrt: Boolean
@@ -18,7 +18,7 @@ class Lunchidea{
     constructor(
         _appid: String,
         _restaurant: String,
-        _bestellzeit: String,
+        _bestellzeit: Long,
         _bezahlungsart: String,
         _gesperrt: Boolean,
         _id: String,

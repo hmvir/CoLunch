@@ -37,6 +37,8 @@ import com.example.colunch.widgets.BottomTopBar
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun DetailLunchScreen(
@@ -104,6 +106,7 @@ fun LunchDetails(
     onDeleteOrderClick: (String) -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
+
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -125,7 +128,11 @@ fun LunchDetails(
             ) {
 
                 Text(text = lunchidea.restaurant, style = MaterialTheme.typography.h6)
-                Text("Zeit: ${lunchidea.bestellzeit}", style = MaterialTheme.typography.body2)
+                val timeD = Date(lunchidea.bestellzeit * 1000)
+                val sdf = SimpleDateFormat("HH:mm")
+                val Time: String = sdf.format(timeD)
+
+                Text("Zeit: ${Time}", style = MaterialTheme.typography.body2)
                 Text(
                     text = "Bezahlungsart: ${lunchidea.bezahlungsart}",
                     style = MaterialTheme.typography.body2
@@ -161,6 +168,35 @@ fun LunchDetails(
 
                                     if (!lunchidea.gesperrt) {
                                         if (teilnehmer.appID == appid) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "EditOrder",
+                                                Modifier.clickable {
+                                                    onUpdateOrderClick(
+                                                        teilnehmer.name,
+                                                        teilnehmer.orderID
+                                                    )
+                                                    Log.d(
+                                                        "Update Order",
+                                                        teilnehmer.name
+                                                    )
+                                                }
+                                            )
+                                            Box(modifier = Modifier.padding(4.dp))
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = "DeleteOrder",
+                                                Modifier.clickable {
+                                                    onDeleteOrderClick(teilnehmer.orderID)
+                                                    Log.d(
+                                                        "Delete Order",
+                                                        teilnehmer.name
+                                                    )
+                                                })
+                                        }
+                                        else if (lunchidea.appid == appid){
+                                            Log.d("IDs", "lunchidea.appid: " + lunchidea.appid )
+                                            Log.d("IDs", "local.appid: $appid")
                                             Icon(
                                                 imageVector = Icons.Default.Edit,
                                                 contentDescription = "EditOrder",
