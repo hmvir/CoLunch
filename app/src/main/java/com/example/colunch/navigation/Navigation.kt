@@ -57,8 +57,10 @@ fun MyNavigation(scaffoldState: ScaffoldState, appid: String) {
 
     NavHost(
         navController = navController,
-        startDestination = Screens.Homescreen.name
-    ) {
+        startDestination = Screens.Splashscreen.name) {
+        composable(Screens.Splashscreen.name) {
+            SplashScreen(navController)
+        }
         composable(Screens.Homescreen.name) {
             HomeScreen(
                 navController,
